@@ -1,4 +1,6 @@
 const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
@@ -12,8 +14,48 @@ const staffRoutes = require('./routes/staffRoutes');
 const blogRoutes = require('./routes/blogRoutes');
 const serviceRoutes = require('./routes/serviceRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
+const messageRoutes = require('./routes/messageRoutes');
 
 const app = express();
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: '*', // Trong thực tế nên giới hạn lại theo frontend url
+    methods: ['GET', 'POST']
+  }
+});
+
+// Setup Socket.IO logic
+io.on('connection', (socket) => {
+  console.log('⚡ Socket connected:', socket.id);
+
+  socket.on('join_room', (userId) => {
+    socket.join(userId);
+    console.log(`User ${userId} joined room`);
+  });
+
+  socket.on('join_admin', () => {
+    socket.join('admin_room');
+    console.log('Admin joined admin_room');
+  });
+
+  socket.on('send_message', (data) => {
+    // data = { senderId, receiverId, content, senderRole, ... }
+    if (data.receiverId === 'admin') {
+      io.to('admin_room').emit('receive_message', data);
+    } else {
+      io.to(data.receiverId).emit('receive_message', data);
+    }
+  });
+
+  socket.on('disconnect', () => {
+    console.log('Socket disconnected:', socket.id);
+  });
+});
+
+// Make io accessible in routes
+app.set('io', io);
 
 // CORS - cho phép frontend truy cập
 const allowedOrigins = [
@@ -113,6 +155,8 @@ app.use('/api/blogs', blogRoutes);
 app.use('/api/services', serviceRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/medical-records', medicalRecordRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/messages', messageRoutes);
 
 // Health check
 app.get('/', (req, res) => {
@@ -162,4 +206,4 @@ const cleanupPendingAppointments = async () => {
 setInterval(cleanupPendingAppointments, 60 * 1000);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server đang chạy tại port ${PORT}`));
+server.listen(PORT, () => console.log(`🚀 Server đang chạy tại port ${PORT}`));

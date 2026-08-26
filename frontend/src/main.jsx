@@ -33,7 +33,7 @@ import Services from './pages/admin/Services.jsx';
 import Revenue from './pages/admin/Revenue.jsx';
 import MedicalRecords from './pages/admin/MedicalRecords.jsx';
 import Settings from './pages/admin/Settings.jsx';
-import PaymentHistory from './pages/admin/PaymentHistory.jsx';
+import { AdminChat } from './pages/admin/AdminChat.jsx';
 import PaymentReturn from './pages/PaymentReturn.jsx';
 import AboutUs from './pages/AboutUs.jsx';
 
@@ -75,7 +75,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                       <Route path="blogs" element={<AdminBlogs />} />
                       <Route path="services" element={<Services />} />
                       <Route path="revenue" element={<Revenue />} />
-                      <Route path="transactions" element={<PaymentHistory />} />
+                      <Route path="chat" element={<AdminChat />} />
                       <Route path="medical-records" element={<MedicalRecords />} />
                       <Route path="settings" element={<Settings />} />
                     </Route>

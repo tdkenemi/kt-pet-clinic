@@ -196,7 +196,7 @@ export default function AboutUs() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {[
               { Icon: MapPin, label: 'Địa chỉ', value: '123 Đường Y Tế, Phường Thú Cưng, Quận 1, TP.HCM', color: 'text-blue-600 bg-blue-50' },
-              { Icon: Phone, label: 'Hotline', value: '0901 234 567\n(Cấp cứu 24/7: 0900 000 911)', color: 'text-emerald-600 bg-emerald-50' },
+              { Icon: Phone, label: 'Hotline', value: '0901 234 567\n(Cấp cứu 24/7: 0900 000 911)', color: 'text-brand-600 bg-brand-50' },
               { Icon: Mail, label: 'Email', value: 'contact@ktpetclinic.vn', color: 'text-violet-600 bg-violet-50' },
               { Icon: Clock, label: 'Giờ làm việc', value: 'T2–T6: 08:00 – 20:00\nT7–CN: 08:00 – 18:00', color: 'text-amber-600 bg-amber-50' },
             ].map(c => {

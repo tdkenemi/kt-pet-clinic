@@ -234,7 +234,7 @@ export default function MyPets() {
 
                 {/* Actions */}
                 <div className="p-3 bg-slate-50 border-t border-slate-100 flex gap-2">
-                  <button onClick={() => navigate('/booking')} className="flex-1 flex items-center justify-center gap-1.5 py-2 text-sm font-medium text-slate-600 hover:text-teal-600 hover:bg-teal-50 rounded-xl transition">
+                  <button onClick={() => navigate('/booking')} className="flex-1 flex items-center justify-center gap-1.5 py-2 text-sm font-medium text-slate-600 hover:text-brand-600 hover:bg-brand-50 rounded-xl transition">
                     <CalendarDays className="w-4 h-4" /> Đặt lịch
                   </button>
                   <div className="w-px bg-slate-200 my-2" />

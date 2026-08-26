@@ -136,8 +136,10 @@ exports.forgotPassword = async (req, res) => {
     user.resetOtpExpiry = expiry;
     await user.save();
 
-    // Log OTP ra console (để test khi chưa có Gmail SMTP config)
-    console.log(`[OTP] Email: ${email} — OTP: ${otp} — Hết hạn: ${expiry.toLocaleTimeString('vi-VN')}`);
+    // [SECURITY] Chỉ log OTP trong môi trường dev, KHÔNG BAO GIỜ trả về HTTP response
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[DEV-ONLY OTP] Email: ${email} — OTP: ${otp} — Hết hạn: ${expiry.toLocaleTimeString('vi-VN')}`);
+    }
 
     // Gửi email nếu có cấu hình Gmail
     if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
@@ -167,21 +169,20 @@ exports.forgotPassword = async (req, res) => {
             </div>
           `,
         });
-        return res.json({ message: 'Mã OTP đã được gửi về email của bạn.' });
+        return res.json({ message: 'Nếu email tồn tại, mã OTP đã được gửi.' });
       } catch (mailErr) {
         console.error('[Mail Error]', mailErr.message);
-        // Nếu gửi mail thất bại, vẫn trả về OTP trong response (chỉ dùng cho dev/demo)
-        return res.json({ 
-          message: 'Mã OTP (demo — email chưa config):',
-          devOtp: otp 
-        });
+        // [SECURITY] Gửi mail thất bại: KHÔNG trả OTP về client, trả về thông báo chung
+        return res.json({ message: 'Nếu email tồn tại, mã OTP đã được gửi.' });
       }
     } else {
-      // Chế độ demo: trả OTP thẳng về response
-      return res.json({ 
-        message: 'Mã OTP đã được tạo (chế độ demo — cấu hình GMAIL_USER để gửi email thật):',
-        devOtp: otp
-      });
+      // Chưa cấu hình Gmail: trong production báo lỗi, trong dev thì log console
+      if (process.env.NODE_ENV === 'production') {
+        console.error('[CONFIG ERROR] GMAIL_USER và GMAIL_APP_PASSWORD chưa được cấu hình!');
+        return res.status(503).json({ message: 'Dịch vụ email chưa sẵn sàng. Vui lòng liên hệ quản trị viên.' });
+      }
+      // Dev mode: OTP đã được log ra console server (xem terminal)
+      return res.json({ message: 'Mã OTP đã được tạo. Xem trong console của server (chế độ dev).' });
     }
   } catch (error) {
     console.error('[ForgotPassword Error]', error);

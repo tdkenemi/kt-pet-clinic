@@ -36,9 +36,9 @@ export default function Staffs() {
   }, [search, staffs]);
 
   const ROLES = [
-    { value: 'Veterinarian', label: 'Bác sĩ Thú y', color: 'bg-teal-50 text-teal-700 border-teal-200' },
+    { value: 'Veterinarian', label: 'Bác sĩ Thú y', color: 'bg-brand-50 text-brand-700 border-brand-200' },
     { value: 'Groomer', label: 'Chuyên viên Grooming', color: 'bg-violet-50 text-violet-700 border-violet-200' },
-    { value: 'Nurse', label: 'Y tá', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
+    { value: 'Nurse', label: 'Y tá', color: 'bg-brand-50 text-brand-700 border-brand-200' },
     { value: 'Admin', label: 'Quản trị viên', color: 'bg-amber-50 text-amber-700 border-amber-200' },
   ];
 
@@ -116,7 +116,7 @@ export default function Staffs() {
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Đội ngũ y tế và nhân viên phòng khám · {staffs.length} thành viên</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-          <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-2.5 ring-1 ring-slate-200 dark:ring-white/10 focus-within:ring-teal-500 transition-all w-full sm:w-64">
+          <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-2.5 ring-1 ring-slate-200 dark:ring-white/10 focus-within:ring-brand-500 transition-all w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-400 shrink-0" />
             <input
               type="text" value={search} onChange={e => setSearch(e.target.value)}
@@ -124,7 +124,7 @@ export default function Staffs() {
               className="flex-1 bg-transparent text-sm font-medium text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
             />
           </div>
-          <button onClick={() => openModal()} className="btn-primary w-full sm:w-auto py-2.5 px-5 text-sm flex items-center justify-center gap-2 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white shadow-lg shadow-teal-500/30 transition-all active:scale-95">
+          <button onClick={() => openModal()} className="btn-primary w-full sm:w-auto py-2.5 px-5 text-sm flex items-center justify-center gap-2 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all active:scale-95">
             <Plus className="w-4 h-4" /> Thêm nhân sự
           </button>
         </div>
@@ -151,14 +151,14 @@ export default function Staffs() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="bg-white dark:bg-slate-900 rounded-3xl p-6 ring-1 ring-slate-200 dark:ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-teal-500/50 group relative overflow-hidden"
+                className="bg-white dark:bg-slate-900 rounded-3xl p-6 ring-1 ring-slate-200 dark:ring-white/10 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:ring-brand-500/50 group relative overflow-hidden"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-teal-500/5 blur-3xl rounded-full pointer-events-none" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/5 blur-3xl rounded-full pointer-events-none" />
                 <div className="flex items-start gap-4 mb-4 relative z-10">
                   {/* Avatar */}
                   <div className="w-16 h-16 rounded-2xl overflow-hidden shrink-0 ring-1 ring-slate-200 dark:ring-white/10 relative bg-slate-100 flex items-center justify-center">
                     {/* Fallback Initials */}
-                    <div className="absolute inset-0 flex items-center justify-center text-white text-2xl font-black bg-gradient-to-br from-teal-500 to-emerald-600">
+                    <div className="absolute inset-0 flex items-center justify-center text-white text-2xl font-black bg-gradient-to-br from-brand-500 to-brand-600">
                       {staff.name?.charAt(0)?.toUpperCase() || <Users className="w-6 h-6" />}
                     </div>
                     {/* Image */}
@@ -170,7 +170,7 @@ export default function Staffs() {
                   </div>
 
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-bold text-lg text-slate-900 dark:text-white tracking-tight truncate group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">{staff.name}</h3>
+                    <h3 className="font-bold text-lg text-slate-900 dark:text-white tracking-tight truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{staff.name}</h3>
                     <span className={`inline-block px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider mt-1 ${roleConfig.color}`}>
                       {roleConfig.label}
                     </span>
@@ -188,7 +188,7 @@ export default function Staffs() {
 
                 <div className="flex gap-2 pt-4 border-t border-slate-100 dark:border-white/5 relative z-10">
                   <button onClick={() => openModal(staff)}
-                    className="flex-1 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-500/10 rounded-xl transition-all flex items-center justify-center gap-1.5 active:scale-95">
+                    className="flex-1 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-xl transition-all flex items-center justify-center gap-1.5 active:scale-95">
                     <Edit2 className="w-4 h-4" /> Chỉnh sửa
                   </button>
                   <button onClick={() => handleDelete(staff._id)}
@@ -223,8 +223,8 @@ export default function Staffs() {
               {/* Modal header */}
               <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/50">
                 <h3 className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                    <Users className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                  <div className="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center">
+                    <Users className="w-5 h-5 text-brand-600 dark:text-brand-400" />
                   </div>
                   {editingStaff ? 'Cập nhật nhân sự' : 'Thêm nhân sự mới'}
                 </h3>
@@ -242,7 +242,7 @@ export default function Staffs() {
                       {imagePreview ? (
                         <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-4xl font-black text-white bg-gradient-to-br from-teal-500 to-emerald-600">
+                        <div className="w-full h-full flex items-center justify-center text-4xl font-black text-white bg-gradient-to-br from-brand-500 to-brand-600">
                           {formData.name?.charAt(0)?.toUpperCase() || '?'}
                         </div>
                       )}
@@ -264,14 +264,14 @@ export default function Staffs() {
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Họ tên *</label>
                   <input type="text" required value={formData.name}
                     onChange={e => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" placeholder="VD: BS. Nguyễn Văn A" />
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="VD: BS. Nguyễn Văn A" />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Vai trò *</label>
                   <select value={formData.role}
                     onChange={e => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all">
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
                     {ROLES.map(r => <option key={r.value} value={r.value}>{r.label}</option>)}
                   </select>
                 </div>
@@ -280,21 +280,21 @@ export default function Staffs() {
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Số điện thoại</label>
                   <input type="text" value={formData.phone}
                     onChange={e => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" placeholder="0901 234 567" />
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="0901 234 567" />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Tiểu sử</label>
                   <textarea rows="3" value={formData.bio}
                     onChange={e => setFormData({ ...formData, bio: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all resize-none" placeholder="Kinh nghiệm, chuyên môn..." />
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none" placeholder="Kinh nghiệm, chuyên môn..." />
                 </div>
 
                 <div className="flex gap-3 pt-4">
                   <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 px-4 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors active:scale-95">
                     Hủy
                   </button>
-                  <button type="submit" disabled={saving} className="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-lg shadow-teal-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
+                  <button type="submit" disabled={saving} className="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
                     {saving ? 'Đang lưu...' : (editingStaff ? 'Cập nhật' : 'Thêm mới')}
                   </button>
                 </div>

@@ -1,4 +1,6 @@
 const Appointment = require('../models/Appointment');
+const Service = require('../models/Service');
+const Notification = require('../models/Notification');
 
 // [Customer/Admin] Đặt lịch hẹn
 exports.createAppointment = async (req, res) => {
@@ -70,9 +72,21 @@ exports.createAppointment = async (req, res) => {
       paidAt,
       confirmedAt
     });
+
+    const io = req.app.get('io');
+    if (io) {
+      io.to('admin_room').emit('new_appointment', appointment);
+    }
+
     res.status(201).json(appointment);
   } catch (error) {
-    res.status(500).json({ message: 'Lỗi server', error: error.message });
+    // [FIX C-03] Xử lý race condition: 2 người đặt cùng bác sĩ, cùng giờ cùng lúc
+    if (error.code === 11000) {
+      return res.status(409).json({ 
+        message: 'Khung giờ này vừa được đặt bởi người khác. Vui lòng chọn khung giờ khác hoặc tải lại trang.' 
+      });
+    }
+    res.status(500).json({ message: 'Lỗi server nội bộ' });
   }
 };
 
@@ -107,6 +121,8 @@ exports.updateAppointmentStatus = async (req, res) => {
     const { status, clinicNote, billingDetails, cancellationReason, notes, travelFee, vetId } = req.body;
     const appointment = await Appointment.findById(req.params.id);
     if (!appointment) return res.status(404).json({ message: 'Không tìm thấy lịch hẹn' });
+
+    const oldStatus = appointment.status;
 
     if (status) appointment.status = status;
     if (clinicNote !== undefined) appointment.clinicNote = clinicNote;
@@ -143,6 +159,44 @@ exports.updateAppointmentStatus = async (req, res) => {
     }
 
     await appointment.save();
+
+    // Trigger Notification
+    if (status && status !== oldStatus) { // if status actually changed
+      let title = '';
+      let message = '';
+      let notifType = 'info';
+
+      if (status === 'confirmed') {
+        title = 'Lịch hẹn đã được xác nhận';
+        message = `Lịch hẹn ngày ${appointment.date} lúc ${appointment.timeSlot} của bạn đã được xác nhận.`;
+        notifType = 'success';
+      } else if (status === 'completed') {
+        title = 'Lịch hẹn hoàn thành';
+        message = `Cảm ơn bạn đã sử dụng dịch vụ. Lịch hẹn ngày ${appointment.date} đã hoàn thành.`;
+        notifType = 'success';
+      } else if (status === 'cancelled') {
+        title = 'Lịch hẹn đã bị huỷ';
+        message = `Lịch hẹn ngày ${appointment.date} của bạn đã bị huỷ. Lý do: ${cancellationReason || 'Hệ thống tự động huỷ do quá hạn thanh toán'}`;
+        notifType = 'error';
+      }
+
+      if (title) {
+        const notif = await Notification.create({
+          userId: appointment.userId,
+          title,
+          message,
+          type: notifType,
+          link: '/appointments'
+        });
+        
+        // Phát sự kiện Socket
+        const io = req.app.get('io');
+        if (io) {
+          io.to(appointment.userId.toString()).emit('new_notification', notif);
+        }
+      }
+    }
+
     res.json(appointment);
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error: error.message });

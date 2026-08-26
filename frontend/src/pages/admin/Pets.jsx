@@ -134,14 +134,14 @@ export default function Pets() {
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Hồ sơ Thú cưng</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">{pets.length} thú cưng đã đăng ký</p>
         </div>
-        <button onClick={() => openModal()} className="btn-primary w-full sm:w-auto py-2.5 px-6 text-sm font-bold flex items-center justify-center gap-2 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white shadow-lg shadow-teal-500/30 transition-all active:scale-95">
+        <button onClick={() => openModal()} className="btn-primary w-full sm:w-auto py-2.5 px-6 text-sm font-bold flex items-center justify-center gap-2 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all active:scale-95">
           <Plus className="w-4 h-4" /> Thêm thú cưng
         </button>
       </div>
 
       {/* Search and Tabs */}
       <div className="bg-white dark:bg-slate-900 p-4 rounded-3xl ring-1 ring-slate-200 dark:ring-white/10 shadow-sm space-y-4">
-        <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-3 ring-1 ring-slate-200 dark:ring-white/5 focus-within:ring-teal-500 transition-all">
+        <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-3 ring-1 ring-slate-200 dark:ring-white/5 focus-within:ring-brand-500 transition-all">
           <Search className="w-4 h-4 text-slate-400 shrink-0" />
           <input
             type="text" value={search} onChange={e => setSearch(e.target.value)}
@@ -159,7 +159,7 @@ export default function Pets() {
                 key={cat}
                 onClick={() => setCategory(cat)}
                 className={`px-4 py-2 rounded-xl text-sm font-bold whitespace-nowrap transition-all active:scale-95 ${
-                  isActive ? 'bg-teal-600 text-white shadow-lg shadow-teal-500/30' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
+                  isActive ? 'bg-brand-600 text-white shadow-lg shadow-brand-500/30' : 'bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-700'
                 }`}
               >
                 {cat === 'Tất cả' ? 'Tất cả' : `${speciesEmoji(cat)} ${cat}`}
@@ -193,10 +193,10 @@ export default function Pets() {
                   <tr key={p._id} onClick={() => openModal(p)} className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-2xl bg-teal-50 dark:bg-teal-500/10 text-2xl flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                        <div className="w-12 h-12 rounded-2xl bg-brand-50 dark:bg-brand-500/10 text-2xl flex items-center justify-center shrink-0 shadow-sm group-hover:scale-105 transition-transform">
                           {speciesEmoji(p.species)}
                         </div>
-                        <p className="font-bold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">{p.name}</p>
+                        <p className="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{p.name}</p>
                       </div>
                     </td>
                     <td className="py-4 px-6">
@@ -219,7 +219,7 @@ export default function Pets() {
                     </td>
                     <td className="py-4 px-6">
                       {p.medicalHistory && p.medicalHistory.length > 0 ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 rounded-lg text-xs font-bold uppercase tracking-wider">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-lg text-xs font-bold uppercase tracking-wider">
                           <Activity className="w-3 h-3" /> {p.medicalHistory.length} mục
                         </span>
                       ) : (
@@ -227,7 +227,7 @@ export default function Pets() {
                       )}
                     </td>
                     <td className="py-4 px-6 text-right space-x-2">
-                      <button onClick={e => { e.stopPropagation(); openModal(p); }} className="p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-500/10 rounded-xl transition-all">
+                      <button onClick={e => { e.stopPropagation(); openModal(p); }} className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-xl transition-all">
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button onClick={e => { e.stopPropagation(); handleDelete(p._id); }} className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all">
@@ -265,7 +265,7 @@ export default function Pets() {
             >
               <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/50">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-teal-50 dark:bg-teal-500/10 flex items-center justify-center text-3xl">
+                  <div className="w-12 h-12 rounded-xl bg-brand-50 dark:bg-brand-500/10 flex items-center justify-center text-3xl">
                     {speciesEmoji(formData.species)}
                   </div>
                   <h3 className="font-black text-xl tracking-tight text-slate-900 dark:text-white">
@@ -287,7 +287,7 @@ export default function Pets() {
                       required
                       value={formData.ownerId}
                       onChange={e => setFormData({ ...formData, ownerId: e.target.value })}
-                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all"
+                      className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
                     >
                       <option value="">-- Chọn khách hàng --</option>
                       {users.map(u => (
@@ -300,14 +300,14 @@ export default function Pets() {
                 <div className="grid grid-cols-2 gap-5">
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Tên *</label>
-                    <input type="text" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" placeholder="Tên thú cưng" />
+                    <input type="text" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="Tên thú cưng" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Loài *</label>
                     <select
                       required value={formData.species}
                       onChange={e => setFormData({ ...formData, species: e.target.value, customSpecies: '' })}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all"
                     >
                       {SPECIES_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
@@ -317,21 +317,21 @@ export default function Pets() {
                         placeholder="Nhập tên loài..."
                         value={formData.customSpecies}
                         onChange={e => setFormData({ ...formData, customSpecies: e.target.value })}
-                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all mt-2"
+                        className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all mt-2"
                       />
                     )}
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Giống</label>
-                    <input type="text" value={formData.breed} onChange={e => setFormData({ ...formData, breed: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" placeholder="VD: Poodle" />
+                    <input type="text" value={formData.breed} onChange={e => setFormData({ ...formData, breed: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="VD: Poodle" />
                   </div>
                   <div>
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Tuổi (năm)</label>
-                    <input type="number" min="0" value={formData.age} onChange={e => setFormData({ ...formData, age: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" />
+                    <input type="number" min="0" value={formData.age} onChange={e => setFormData({ ...formData, age: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Cân nặng (kg)</label>
-                    <input type="number" step="0.1" min="0" value={formData.weightKg} onChange={e => setFormData({ ...formData, weightKg: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" />
+                    <input type="number" step="0.1" min="0" value={formData.weightKg} onChange={e => setFormData({ ...formData, weightKg: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" />
                   </div>
                 </div>
                 <div className="pt-2">
@@ -339,7 +339,7 @@ export default function Pets() {
                   <textarea
                     rows="4" value={formData.medicalHistory}
                     onChange={e => setFormData({ ...formData, medicalHistory: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-mono text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all resize-none"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-mono text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none"
                     placeholder={"- 12/10/2024: Tiêm phòng dại\n- 05/11/2024: Khám viêm da"}
                   />
                 </div>
@@ -347,7 +347,7 @@ export default function Pets() {
                   <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 px-4 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors active:scale-95">
                     Hủy
                   </button>
-                  <button type="submit" disabled={saving} className="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-lg shadow-teal-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
+                  <button type="submit" disabled={saving} className="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
                     {saving ? 'Đang lưu...' : (editingPet ? 'Cập nhật' : 'Thêm thú cưng')}
                   </button>
                 </div>

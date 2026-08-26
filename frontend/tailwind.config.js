@@ -8,38 +8,66 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Inter"', '"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-        display: ['"Plus Jakarta Sans"', '"Inter"', 'sans-serif'],
+        sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+        display: ['"Plus Jakarta Sans"', 'sans-serif'],
       },
       colors: {
         brand: {
-          50: '#f0fdfa',
-          100: '#ccfbf1',
-          200: '#99f6e4',
-          300: '#5eead4',
-          400: '#2dd4bf',
-          500: '#14b8a6',
-          600: '#0d9488',
-          700: '#0f766e',
-          800: '#115e59',
-          900: '#134e4a',
+          50: '#f2fcf5',
+          100: '#e1f8ea',
+          200: '#c3efd5',
+          300: '#94dfb9',
+          400: '#5ec695',
+          500: '#35a977',
+          600: '#25875e',
+          700: '#1e6b4d',
+          800: '#1b553f',
+          900: '#164634',
         },
+        gold: {
+          50: '#fdfbfa',
+          100: '#fbf5f0',
+          200: '#f5e8db',
+          300: '#ecd2bc',
+          400: '#e0b596',
+          500: '#d49670',
+          600: '#c77850',
+          700: '#a65e3e',
+          800: '#864c35',
+          900: '#6d402e',
+        }
       },
       borderRadius: {
-        '3xl': '24px',
-        '4xl': '32px',
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+        '4xl': '2rem',
       },
       boxShadow: {
-        'teal': '0 6px 20px -4px rgb(13 148 136 / 0.35)',
-        'teal-lg': '0 12px 32px -6px rgb(13 148 136 / 0.4)',
-        'amber': '0 6px 20px -4px rgb(245 158 11 / 0.35)',
-        'card': '0 1px 3px 0 rgb(0 0 0 / 0.07), 0 1px 2px -1px rgb(0 0 0 / 0.07)',
-        'card-hover': '0 16px 32px -8px rgb(0 0 0 / 0.12)',
+        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+        'float': '0 12px 32px -8px rgba(0, 0, 0, 0.08)',
+        'glow-brand': '0 8px 24px -4px rgba(37, 135, 94, 0.3)',
+        'glow-gold': '0 8px 24px -4px rgba(212, 150, 112, 0.3)',
       },
       animation: {
-        'float': 'float 3s ease-in-out infinite',
+        'float': 'float 4s ease-in-out infinite',
+        'fade-up': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'fade-in': 'fadeIn 0.4s ease-out forwards',
         'spin-slow': 'spin-slow 8s linear infinite',
       },
+      keyframes: {
+        fadeUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-8px)' },
+        }
+      }
     },
   },
   plugins: [],

@@ -106,6 +106,21 @@ exports.confirmPayment = async (req, res) => {
  */
 exports.vietqrWebhook = async (req, res) => {
   try {
+    // [SECURITY C-02] Xác thực Secure Token từ Casso/VietQR
+    // Cấu hình tại: casso.vn → Cài đặt → API → Secure Token
+    const cassoSecureToken = process.env.CASSO_SECURE_TOKEN;
+    if (cassoSecureToken) {
+      const incomingToken = req.headers['secure-token'] || req.headers['authorization'];
+      if (!incomingToken || incomingToken !== cassoSecureToken) {
+        console.warn(`[Webhook] REJECTED - Invalid or missing secure token from IP: ${req.ip}`);
+        return res.status(401).json({ message: 'Unauthorized webhook request' });
+      }
+    } else if (process.env.NODE_ENV === 'production') {
+      // Production bắt buộc phải có token, không có thì reject tất cả
+      console.error('[Webhook] CASSO_SECURE_TOKEN chưa được cấu hình trong .env!');
+      return res.status(503).json({ message: 'Webhook not configured' });
+    }
+
     const payload = req.body;
     
     // Hỗ trợ format từ casso.vn và VietQR

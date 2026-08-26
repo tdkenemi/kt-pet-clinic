@@ -110,7 +110,7 @@ export default function AdminServices() {
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Cấu hình các dịch vụ hiển thị cho khách hàng</p>
         </div>
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-          <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-2.5 ring-1 ring-slate-200 dark:ring-white/10 focus-within:ring-teal-500 transition-all w-full sm:w-64">
+          <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-2.5 ring-1 ring-slate-200 dark:ring-white/10 focus-within:ring-brand-500 transition-all w-full sm:w-64">
             <Search className="w-4 h-4 text-slate-400 shrink-0" />
             <input
               type="text" value={search} onChange={e => setSearch(e.target.value)}
@@ -118,7 +118,7 @@ export default function AdminServices() {
               className="flex-1 bg-transparent text-sm font-medium text-slate-900 dark:text-white outline-none placeholder:text-slate-400"
             />
           </div>
-          <button onClick={() => openModal()} className="btn-primary w-full sm:w-auto py-2.5 px-5 text-sm flex items-center justify-center gap-2 rounded-2xl bg-teal-600 hover:bg-teal-700 text-white shadow-lg shadow-teal-500/30 transition-all active:scale-95">
+          <button onClick={() => openModal()} className="btn-primary w-full sm:w-auto py-2.5 px-5 text-sm flex items-center justify-center gap-2 rounded-2xl bg-brand-600 hover:bg-brand-700 text-white shadow-lg shadow-brand-500/30 transition-all active:scale-95">
             <Plus className="w-4 h-4" /> Thêm mới
           </button>
         </div>
@@ -132,18 +132,18 @@ export default function AdminServices() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className={`bg-white dark:bg-slate-900 rounded-3xl p-6 ring-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group relative overflow-hidden ${svc.isActive ? 'ring-slate-200 dark:ring-white/10 hover:ring-teal-500/50' : 'ring-slate-200 dark:ring-white/10 opacity-70'}`}
+            className={`bg-white dark:bg-slate-900 rounded-3xl p-6 ring-1 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group relative overflow-hidden ${svc.isActive ? 'ring-slate-200 dark:ring-white/10 hover:ring-brand-500/50' : 'ring-slate-200 dark:ring-white/10 opacity-70'}`}
           >
-            {svc.isActive && <div className="absolute top-0 right-0 w-24 h-24 bg-teal-500/5 blur-3xl rounded-full pointer-events-none" />}
+            {svc.isActive && <div className="absolute top-0 right-0 w-24 h-24 bg-brand-500/5 blur-3xl rounded-full pointer-events-none" />}
             
             <div className="flex justify-between items-start mb-4 relative z-10">
               <div className="flex items-center gap-4">
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-sm ${svc.isActive ? 'bg-gradient-to-br from-teal-50 to-emerald-50 dark:from-teal-500/10 dark:to-emerald-500/10 ring-1 ring-teal-500/20' : 'bg-slate-100 dark:bg-slate-800'}`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-3xl shrink-0 shadow-sm ${svc.isActive ? 'bg-gradient-to-br from-brand-50 to-brand-50 dark:from-brand-500/10 dark:to-brand-500/10 ring-1 ring-brand-500/20' : 'bg-slate-100 dark:bg-slate-800'}`}>
                   {svc.emoji}
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg tracking-tight text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors line-clamp-1">{svc.name}</h3>
-                  <span className={`inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${svc.isActive ? 'bg-emerald-500/10 text-emerald-600' : 'bg-slate-500/10 text-slate-500'}`}>
+                  <h3 className="font-bold text-lg tracking-tight text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors line-clamp-1">{svc.name}</h3>
+                  <span className={`inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider ${svc.isActive ? 'bg-brand-500/10 text-brand-600' : 'bg-slate-500/10 text-slate-500'}`}>
                     {svc.isActive ? 'Đang hoạt động' : 'Tạm ẩn'}
                   </span>
                 </div>
@@ -159,7 +159,7 @@ export default function AdminServices() {
               </div>
               <div className="flex flex-col gap-1">
                 <span className="uppercase tracking-wider text-[10px] font-bold text-slate-400">Giá cơ bản</span>
-                <span className="font-bold text-teal-600 dark:text-teal-400">{svc.basePrice?.toLocaleString()} ₫</span>
+                <span className="font-bold text-brand-600 dark:text-brand-400">{svc.basePrice?.toLocaleString()} ₫</span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="uppercase tracking-wider text-[10px] font-bold text-slate-400">Thời lượng</span>
@@ -181,7 +181,7 @@ export default function AdminServices() {
             </div>
             
             <div className="flex gap-2 pt-4 border-t border-slate-100 dark:border-white/5 relative z-10">
-              <button onClick={() => openModal(svc)} className="flex-1 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-500/10 rounded-xl transition-all flex items-center justify-center gap-1.5 active:scale-95">
+              <button onClick={() => openModal(svc)} className="flex-1 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-xl transition-all flex items-center justify-center gap-1.5 active:scale-95">
                 <Edit2 className="w-4 h-4" /> Chỉnh sửa
               </button>
               <button onClick={() => handleDelete(svc._id)} className="flex-1 py-2 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-xl transition-all flex items-center justify-center gap-1.5 active:scale-95">
@@ -212,8 +212,8 @@ export default function AdminServices() {
             >
               <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/50">
                 <h3 className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                    <Activity className="w-5 h-5 text-teal-600 dark:text-teal-400" />
+                  <div className="w-10 h-10 rounded-xl bg-brand-500/10 flex items-center justify-center">
+                    <Activity className="w-5 h-5 text-brand-600 dark:text-brand-400" />
                   </div>
                   {editingService ? 'Cập nhật Dịch vụ' : 'Thêm Dịch vụ mới'}
                 </h3>
@@ -226,15 +226,15 @@ export default function AdminServices() {
                 <div className="grid grid-cols-2 gap-5">
                   <div className="col-span-2 sm:col-span-1">
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Tên dịch vụ *</label>
-                    <input type="text" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" placeholder="VD: Khám bệnh tại nhà" />
+                    <input type="text" required value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="VD: Khám bệnh tại nhà" />
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Emoji</label>
-                    <input type="text" value={formData.emoji} onChange={e => setFormData({ ...formData, emoji: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" placeholder="VD: 🏠" />
+                    <input type="text" value={formData.emoji} onChange={e => setFormData({ ...formData, emoji: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="VD: 🏠" />
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Phân loại *</label>
-                    <select value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all">
+                    <select value={formData.category} onChange={e => setFormData({ ...formData, category: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
                       <option value="Medical">Y tế (Medical)</option>
                       <option value="Grooming">Làm đẹp (Grooming)</option>
                       <option value="Hotel">Khách sạn (Hotel)</option>
@@ -244,39 +244,39 @@ export default function AdminServices() {
                   </div>
                   <div className="col-span-2 sm:col-span-1">
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Giá (VNĐ)</label>
-                    <input type="number" min="0" required value={formData.basePrice} onChange={e => setFormData({ ...formData, basePrice: Number(e.target.value) })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" />
+                    <input type="number" min="0" required value={formData.basePrice} onChange={e => setFormData({ ...formData, basePrice: Number(e.target.value) })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" />
                   </div>
                   <div className="col-span-2">
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Mô tả ngắn</label>
-                    <textarea rows="2" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all resize-none" placeholder="VD: Bác sĩ đến tận nhà..." />
+                    <textarea rows="2" value={formData.description} onChange={e => setFormData({ ...formData, description: e.target.value })} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all resize-none" placeholder="VD: Bác sĩ đến tận nhà..." />
                   </div>
                   
                   <div className="col-span-2 bg-slate-50 dark:bg-slate-950/50 p-4 rounded-2xl ring-1 ring-slate-200 dark:ring-white/5 space-y-3">
                     <label className="flex items-center gap-3 cursor-pointer group">
                       <div className="relative flex items-center justify-center">
                         <input type="checkbox" checked={formData.clinicServiceAvailable} onChange={e => setFormData({ ...formData, clinicServiceAvailable: e.target.checked })} className="peer sr-only" />
-                        <div className="w-5 h-5 rounded border-2 border-slate-300 dark:border-slate-600 peer-checked:bg-teal-500 peer-checked:border-teal-500 transition-all" />
+                        <div className="w-5 h-5 rounded border-2 border-slate-300 dark:border-slate-600 peer-checked:bg-brand-500 peer-checked:border-brand-500 transition-all" />
                         <CheckCircle className="w-3.5 h-3.5 text-white absolute opacity-0 peer-checked:opacity-100 transition-opacity" />
                       </div>
-                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">Hỗ trợ làm tại phòng khám</span>
+                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Hỗ trợ làm tại phòng khám</span>
                     </label>
                     
                     <label className="flex items-center gap-3 cursor-pointer group">
                       <div className="relative flex items-center justify-center">
                         <input type="checkbox" checked={formData.homeServiceAvailable} onChange={e => setFormData({ ...formData, homeServiceAvailable: e.target.checked })} className="peer sr-only" />
-                        <div className="w-5 h-5 rounded border-2 border-slate-300 dark:border-slate-600 peer-checked:bg-teal-500 peer-checked:border-teal-500 transition-all" />
+                        <div className="w-5 h-5 rounded border-2 border-slate-300 dark:border-slate-600 peer-checked:bg-brand-500 peer-checked:border-brand-500 transition-all" />
                         <CheckCircle className="w-3.5 h-3.5 text-white absolute opacity-0 peer-checked:opacity-100 transition-opacity" />
                       </div>
-                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">Hỗ trợ làm tại nhà</span>
+                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Hỗ trợ làm tại nhà</span>
                     </label>
 
                     <label className="flex items-center gap-3 cursor-pointer group pt-2 border-t border-slate-200 dark:border-white/10">
                       <div className="relative flex items-center justify-center">
                         <input type="checkbox" checked={formData.isActive} onChange={e => setFormData({ ...formData, isActive: e.target.checked })} className="peer sr-only" />
-                        <div className="w-5 h-5 rounded border-2 border-slate-300 dark:border-slate-600 peer-checked:bg-teal-500 peer-checked:border-teal-500 transition-all" />
+                        <div className="w-5 h-5 rounded border-2 border-slate-300 dark:border-slate-600 peer-checked:bg-brand-500 peer-checked:border-brand-500 transition-all" />
                         <CheckCircle className="w-3.5 h-3.5 text-white absolute opacity-0 peer-checked:opacity-100 transition-opacity" />
                       </div>
-                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">Hiển thị (Active)</span>
+                      <span className="text-sm font-bold text-slate-700 dark:text-slate-300 group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">Hiển thị (Active)</span>
                     </label>
                   </div>
                   
@@ -330,7 +330,7 @@ export default function AdminServices() {
                   <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 py-3 px-4 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors active:scale-95">
                     Đóng
                   </button>
-                  <button type="submit" disabled={saving} className="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-lg shadow-teal-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
+                  <button type="submit" disabled={saving} className="flex-1 py-3 px-4 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
                     {saving ? 'Đang lưu...' : 'Lưu dịch vụ'}
                   </button>
                 </div>

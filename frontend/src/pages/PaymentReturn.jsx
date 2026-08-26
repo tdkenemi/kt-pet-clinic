@@ -42,13 +42,13 @@ export default function PaymentReturn() {
       >
         {loading ? (
           <div className="py-16 flex flex-col items-center justify-center space-y-4">
-            <RefreshCw className="w-12 h-12 text-teal-600 animate-spin" />
+            <RefreshCw className="w-12 h-12 text-brand-600 animate-spin" />
             <h2 className="text-xl font-bold text-slate-800">Đang xác thực giao dịch VNPay...</h2>
             <p className="text-sm text-slate-500">Vui lòng không tắt hoặc tải lại trang</p>
           </div>
         ) : result?.success ? (
           <div className="space-y-6">
-            <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
+            <div className="w-20 h-20 bg-brand-100 text-brand-600 rounded-full flex items-center justify-center mx-auto shadow-inner">
               <CheckCircle2 className="w-12 h-12" />
             </div>
 
@@ -64,7 +64,7 @@ export default function PaymentReturn() {
             <div className="bg-slate-50 rounded-2xl p-5 border border-slate-100 text-left space-y-3 text-sm">
               <div className="flex justify-between items-center border-b border-slate-200/60 pb-2">
                 <span className="text-slate-500 font-medium">Số tiền đã trả</span>
-                <span className="font-bold text-teal-700 text-base">{formatCurrency(result.amount)}</span>
+                <span className="font-bold text-brand-700 text-base">{formatCurrency(result.amount)}</span>
               </div>
               <div className="flex justify-between items-center border-b border-slate-200/60 pb-2">
                 <span className="text-slate-500 font-medium">Phương thức</span>
@@ -81,7 +81,7 @@ export default function PaymentReturn() {
             <div className="pt-2 flex flex-col gap-3">
               <Link
                 to="/my-appointments"
-                className="w-full btn-primary py-3.5 rounded-2xl flex items-center justify-center gap-2 font-bold shadow-lg shadow-teal-500/20"
+                className="w-full btn-primary py-3.5 rounded-2xl flex items-center justify-center gap-2 font-bold shadow-lg shadow-brand-500/20"
               >
                 <CalendarCheck className="w-5 h-5" />
                 <span>Xem lịch hẹn của tôi</span>

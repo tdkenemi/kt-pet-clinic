@@ -69,7 +69,21 @@ const appointmentSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-// Index để tránh trùng lịch
+// [FIX C-03] Unique compound index ngăn double-booking
+// Chỉ enforce khi lịch còn active (pending/confirmed), không chặn lịch đã hủy/hoàn thành
+appointmentSchema.index(
+  { date: 1, timeSlot: 1, vetId: 1 },
+  {
+    unique: true,
+    sparse: true, // Cho phép vetId là null (chưa phân bác sĩ)
+    partialFilterExpression: {
+      status: { $in: ['pending', 'confirmed'] },
+      vetId: { $exists: true, $ne: null } // Chỉ enforce khi đã chọn bác sĩ
+    },
+    name: 'prevent_double_booking'
+  }
+);
+// Index phụ để tăng tốc query
 appointmentSchema.index({ date: 1, timeSlot: 1, status: 1 });
 
 module.exports = mongoose.model('Appointment', appointmentSchema);

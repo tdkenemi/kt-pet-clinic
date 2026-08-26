@@ -122,7 +122,7 @@ export default function MyProfile() {
 
   const roleConfig = {
     admin: { label: '👑 Quản trị viên', cls: 'bg-amber-50 text-amber-700 border-amber-200' },
-    veterinarian: { label: '🩺 Bác sĩ thú y', cls: 'bg-teal-50 text-teal-700 border-teal-200' },
+    veterinarian: { label: '🩺 Bác sĩ thú y', cls: 'bg-brand-50 text-brand-700 border-brand-200' },
     customer: { label: '🐾 Khách hàng', cls: 'bg-slate-100 text-slate-700 border-slate-200' },
   };
   const roleInfo = roleConfig[profile?.role] || roleConfig.customer;
@@ -150,7 +150,7 @@ export default function MyProfile() {
         <AnimatePresence>
           {success && (
             <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-              className="bg-teal-50 border border-teal-200 text-teal-700 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+              className="bg-brand-50 border border-brand-200 text-brand-700 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
               <CheckCircle className="w-4 h-4 shrink-0" /> {success}
             </motion.div>
           )}
@@ -207,7 +207,7 @@ export default function MyProfile() {
 
               {avatarFile && (
                 <div className="flex gap-2 pb-1">
-                  <span className="text-xs text-teal-600 font-medium bg-teal-50 px-2 py-1 rounded-lg border border-teal-200">
+                  <span className="text-xs text-brand-600 font-medium bg-brand-50 px-2 py-1 rounded-lg border border-brand-200">
                     <Upload className="w-3 h-3 inline mr-1" />Ảnh mới
                   </span>
                   <button type="button" onClick={() => { setAvatarFile(null); setAvatarPreview(profile?.avatar || ''); }}
@@ -346,7 +346,7 @@ export default function MyProfile() {
             { to: '/blog?tab=my', icon: '📝', label: 'Bài viết', sub: 'Quản lý bài đăng' },
           ].map(({ to, icon, label, sub }) => (
             <Link key={to} to={to}
-              className="flex items-center gap-3 p-3 rounded-xl hover:bg-teal-50 hover:border-teal-200 border border-slate-200 transition-all group">
+              className="flex items-center gap-3 p-3 rounded-xl hover:bg-brand-50 hover:border-brand-200 border border-slate-200 transition-all group">
               <span className="text-2xl group-hover:scale-110 transition-transform">{icon}</span>
               <div>
                 <p className="font-semibold text-slate-900 text-sm">{label}</p>

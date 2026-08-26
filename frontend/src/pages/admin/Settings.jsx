@@ -90,8 +90,8 @@ export default function Settings() {
 
       {/* QR Bank Config */}
       <div className="bg-white dark:bg-slate-900 rounded-[2rem] ring-1 ring-slate-200 dark:ring-white/10 shadow-sm overflow-hidden">
-        <div className="flex items-center gap-4 p-6 border-b border-slate-100 dark:border-white/5 bg-gradient-to-r from-teal-50/50 to-cyan-50/50 dark:from-teal-500/5 dark:to-cyan-500/5">
-          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-teal-500/20 shrink-0"
+        <div className="flex items-center gap-4 p-6 border-b border-slate-100 dark:border-white/5 bg-gradient-to-r from-brand-50/50 to-cyan-50/50 dark:from-brand-500/5 dark:to-cyan-500/5">
+          <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg shadow-brand-500/20 shrink-0"
             style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}>
             <QrCode className="w-6 h-6 text-white" />
           </div>
@@ -113,7 +113,7 @@ export default function Settings() {
           <form onSubmit={handleSave} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Ngân hàng</label>
-              <select value={bankId} onChange={e => setBankId(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-teal-500 transition-all cursor-pointer">
+              <select value={bankId} onChange={e => setBankId(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-brand-500 transition-all cursor-pointer">
                 {BANK_OPTIONS.map(b => <option key={b.value} value={b.value}>{b.label}</option>)}
               </select>
             </div>
@@ -121,18 +121,18 @@ export default function Settings() {
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Số tài khoản</label>
               <input type="text" value={accountNo} onChange={e => setAccountNo(e.target.value)}
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-teal-500 transition-all placeholder:text-slate-400" placeholder="0123456789" required />
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-brand-500 transition-all placeholder:text-slate-400" placeholder="0123456789" required />
             </div>
 
             <div className="md:col-span-2">
               <label className="block text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Tên tài khoản</label>
               <input type="text" value={accountName} onChange={e => setAccountName(e.target.value.toUpperCase())}
-                className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-teal-500 transition-all placeholder:text-slate-400 uppercase" placeholder="PHONG KHAM THU CUNG KT" required />
+                className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-brand-500 transition-all placeholder:text-slate-400 uppercase" placeholder="PHONG KHAM THU CUNG KT" required />
               <p className="text-[10px] font-bold text-slate-400 mt-2">Nhập IN HOA như trên tài khoản ngân hàng</p>
             </div>
 
             <div className="md:col-span-2 flex flex-col sm:flex-row gap-4 pt-2">
-              <button type="submit" className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 transition-colors shadow-lg shadow-teal-500/30 active:scale-95">
+              <button type="submit" className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-lg shadow-brand-500/30 active:scale-95">
                 {saved ? <><CheckCircle className="w-5 h-5" /> Đã lưu!</> : <><Save className="w-5 h-5" /> Lưu & Xem thử</>}
               </button>
               <button type="button" onClick={generatePreview} className="flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors active:scale-95">
@@ -161,7 +161,7 @@ export default function Settings() {
                     <p>💳 Số TK: <strong className="text-slate-900 dark:text-white">{accountNo}</strong></p>
                     <p>👤 Tên TK: <strong className="text-slate-900 dark:text-white">{accountName}</strong></p>
                   </div>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 mt-4 flex items-center gap-1.5">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 mt-4 flex items-center gap-1.5">
                     <CheckCircle className="w-4 h-4" />
                     Có thể quét bằng bất kỳ app ngân hàng nào
                   </p>
@@ -186,9 +186,9 @@ export default function Settings() {
         </div>
 
         <div className="p-6 sm:p-8 space-y-6">
-          <div className="bg-teal-50 dark:bg-teal-500/10 ring-1 ring-teal-200 dark:ring-teal-500/30 rounded-2xl p-5 flex items-start gap-4">
-            <Info className="w-5 h-5 text-teal-600 dark:text-teal-500 shrink-0 mt-0.5" />
-            <div className="text-sm font-medium text-teal-800 dark:text-teal-400">
+          <div className="bg-brand-50 dark:bg-brand-500/10 ring-1 ring-brand-200 dark:ring-brand-500/30 rounded-2xl p-5 flex items-start gap-4">
+            <Info className="w-5 h-5 text-brand-600 dark:text-brand-500 shrink-0 mt-0.5" />
+            <div className="text-sm font-medium text-brand-800 dark:text-brand-400">
               <p className="font-bold mb-1 tracking-tight text-base">Cách hoạt động</p>
               <p className="leading-relaxed">Khi khách quét QR và chuyển tiền → Ngân hàng gửi thông báo đến webhook URL → Server tự động đánh dấu "Đã thanh toán" → Giao diện tự cập nhật. Không cần admin phải tick thủ công!</p>
             </div>
@@ -237,7 +237,7 @@ export default function Settings() {
                   className="absolute top-3 right-3 p-2 bg-white/10 hover:bg-white/20 rounded-xl text-white transition-colors backdrop-blur"
                   title="Copy"
                 >
-                  {copiedNgrok ? <CheckCircle className="w-4 h-4 text-teal-400" /> : <Copy className="w-4 h-4" />}
+                  {copiedNgrok ? <CheckCircle className="w-4 h-4 text-brand-400" /> : <Copy className="w-4 h-4" />}
                 </button>
               </div>
               {note && (
@@ -249,7 +249,7 @@ export default function Settings() {
           ))}
 
           <div className="bg-amber-50 dark:bg-amber-500/10 ring-1 ring-amber-200 dark:ring-amber-500/30 rounded-2xl p-5 text-sm font-medium text-amber-800 dark:text-amber-400">
-            <p>Admin có thể dùng nút <strong className="font-bold text-teal-700 dark:text-teal-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded ring-1 ring-teal-200 dark:ring-teal-500/30 mx-1">QR ✓</strong> trong trang quản lý lịch hẹn để xác nhận thủ công sau khi kiểm tra biến động tài khoản ngân hàng trên điện thoại cá nhân.</p>
+            <p>Admin có thể dùng nút <strong className="font-bold text-brand-700 dark:text-brand-400 bg-white dark:bg-slate-900 px-1.5 py-0.5 rounded ring-1 ring-brand-200 dark:ring-brand-500/30 mx-1">QR ✓</strong> trong trang quản lý lịch hẹn để xác nhận thủ công sau khi kiểm tra biến động tài khoản ngân hàng trên điện thoại cá nhân.</p>
           </div>
         </div>
       </div>
@@ -276,7 +276,7 @@ export default function Settings() {
               value={mockId} 
               onChange={e => setMockId(e.target.value)}
               placeholder="Nhập Object ID của lịch hẹn (Copy từ URL hoặc DS)" 
-              className="flex-1 bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-teal-500 transition-all placeholder:text-slate-400"
+              className="flex-1 bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-5 py-4 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-brand-500 transition-all placeholder:text-slate-400"
             />
             <button 
               onClick={handleMockWebhook} 

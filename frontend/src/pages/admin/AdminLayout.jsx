@@ -3,11 +3,13 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Calendar, Users, PawPrint, LogOut, Settings,
   FileText, Bell, ArrowLeft, Menu, X, Stethoscope, BookOpen, Activity, DollarSign,
-  ChevronRight, Syringe, CreditCard, ClipboardList, Sun, Moon
+  ChevronRight, Syringe, CreditCard, ClipboardList, Sun, Moon, MessageCircle
 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { io } from 'socket.io-client';
+import axios from 'axios';
 
 const pageVariants = {
   initial: { opacity: 0, y: 10, scale: 0.99 },
@@ -24,7 +26,10 @@ const pageTransition = {
 export default function AdminLayout() {
   const [user, setUser] = useState(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [notifications] = useState(3);
+  const [unreadNotifs, setUnreadNotifs] = useState(0);
+  const [adminNotifs, setAdminNotifs] = useState([]);
+  const [showNotifDropdown, setShowNotifDropdown] = useState(false);
+  const [unreadChat, setUnreadChat] = useState(0);
   const location = useLocation();
   const navigate = useNavigate();
   const { t, lang, toggleLanguage } = useLanguage();
@@ -55,6 +60,48 @@ export default function AdminLayout() {
 
   useEffect(() => { setSidebarOpen(false); }, [location.pathname]);
 
+  useEffect(() => {
+    if (user && (user.role === 'admin' || user.role === 'veterinarian')) {
+      const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000');
+      socket.emit('join_admin');
+
+      socket.on('receive_message', (msg) => {
+        // If not on chat page, increment badge
+        if (!location.pathname.startsWith('/admin/chat')) {
+          setUnreadChat(prev => prev + 1);
+        }
+      });
+
+      socket.on('new_appointment', (appt) => {
+        setUnreadNotifs(prev => prev + 1);
+        setAdminNotifs(prev => [appt, ...prev].slice(0, 10));
+      });
+
+      // Initial counts
+      axios.get('/api/messages/conversations', { headers: { Authorization: `Bearer ${user.token}` } })
+        .then(res => {
+          const unread = res.data.reduce((acc, conv) => {
+            if (conv.latestMessage?.senderType === 'user' && !conv.latestMessage?.isReadByAdmin) {
+              return acc + 1;
+            }
+            return acc;
+          }, 0);
+          setUnreadChat(unread);
+        })
+        .catch(console.error);
+
+      // Fetch recent appointments for notifications dropdown
+      axios.get('/api/appointments', { headers: { Authorization: `Bearer ${user.token}` } })
+        .then(res => {
+          // just top 10 most recent
+          setAdminNotifs(res.data.slice(0, 10));
+        })
+        .catch(console.error);
+
+      return () => socket.disconnect();
+    }
+  }, [user, location.pathname]);
+
   if (!user) return null;
 
   const menuItems = [
@@ -65,8 +112,8 @@ export default function AdminLayout() {
     { path: '/admin/customers', name: 'Khách hàng', icon: Users },
     { path: '/admin/pets', name: 'Thú cưng', icon: PawPrint },
     { path: '/admin/services', name: 'Dịch vụ', icon: Activity },
-    { path: '/admin/revenue', name: 'Doanh thu', icon: DollarSign },
-    { path: '/admin/transactions', name: 'Giao dịch', icon: CreditCard },
+    { path: '/admin/revenue', name: 'Tài chính', icon: DollarSign },
+    { path: '/admin/chat', name: 'Tin nhắn', icon: MessageCircle, badge: unreadChat },
     { path: '/admin/blogs', name: 'Blog', icon: BookOpen },
     { path: '/admin/medical-records', name: 'Hồ sơ y tế', icon: FileText },
     { path: '/admin/settings', name: 'Cài đặt', icon: Settings },
@@ -84,17 +131,17 @@ export default function AdminLayout() {
   const Sidebar = () => (
     <div className="w-[260px] flex flex-col h-full bg-slate-950 border-r border-white/5 relative overflow-hidden">
       {/* Background glow effects */}
-      <div className="absolute top-0 left-0 w-full h-64 bg-teal-500/10 blur-[80px] pointer-events-none" />
+      <div className="absolute top-0 left-0 w-full h-64 bg-brand-500/10 blur-[80px] pointer-events-none" />
       
       {/* Logo */}
       <div className="px-6 py-6 z-10 relative">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-br from-teal-400 to-emerald-600 shadow-lg shadow-teal-500/20 ring-1 ring-white/20">
+          <div className="w-10 h-10 rounded-2xl flex items-center justify-center bg-gradient-to-br from-brand-400 to-brand-600 shadow-lg shadow-brand-500/20 ring-1 ring-white/20">
             <Stethoscope className="w-5 h-5 text-white" />
           </div>
           <div>
             <h2 className="font-bold text-white text-base tracking-tight leading-tight">KT Clinic</h2>
-            <p className="text-teal-400 text-[10px] font-semibold uppercase tracking-widest mt-0.5">
+            <p className="text-brand-400 text-[10px] font-semibold uppercase tracking-widest mt-0.5">
               {user.role === 'admin' ? 'Workspace' : 'Veterinarian'}
             </p>
           </div>
@@ -120,13 +167,18 @@ export default function AdminLayout() {
               {active && (
                 <motion.div
                   layoutId="activeTabIndicator"
-                  className="absolute left-0 top-0 w-1 h-full bg-teal-400 rounded-r-full"
+                  className="absolute left-0 top-0 w-1 h-full bg-brand-400 rounded-r-full"
                   initial={false}
                   transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
               )}
-              <Icon className={`w-4 h-4 shrink-0 transition-colors duration-300 ${active ? 'text-teal-400' : 'text-slate-500 group-hover:text-slate-300'}`} />
+              <Icon className={`w-4 h-4 shrink-0 transition-colors duration-300 ${active ? 'text-brand-400' : 'text-slate-500 group-hover:text-slate-300'}`} />
               <span className="flex-1 tracking-tight">{item.name}</span>
+              {item.badge > 0 && (
+                <span className="bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                  {item.badge > 9 ? '9+' : item.badge}
+                </span>
+              )}
             </Link>
           );
         })}
@@ -237,18 +289,72 @@ export default function AdminLayout() {
             </button>
 
             {/* Notifications */}
-            <button className="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
-              <Bell className="w-5 h-5" />
-              {notifications > 0 && (
-                <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full animate-pulse" />
-              )}
-            </button>
+            <div className="relative">
+              <button 
+                onClick={() => { setUnreadNotifs(0); setShowNotifDropdown(!showNotifDropdown); }}
+                className="relative p-2 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+              >
+                <Bell className="w-5 h-5" />
+                {unreadNotifs > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white animate-pulse" />
+                )}
+              </button>
+
+              <AnimatePresence>
+                {showNotifDropdown && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-40" 
+                      onClick={() => setShowNotifDropdown(false)}
+                    />
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      className="absolute right-0 mt-2 w-80 bg-white dark:bg-slate-900 rounded-2xl shadow-xl shadow-brand-500/10 ring-1 ring-slate-200 dark:ring-white/10 overflow-hidden z-50"
+                    >
+                      <div className="p-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-slate-50/50 dark:bg-slate-800/50">
+                        <h3 className="font-semibold text-slate-800 dark:text-white">Thông báo lịch hẹn</h3>
+                      </div>
+                      <div className="max-h-[300px] overflow-y-auto custom-scrollbar">
+                        {adminNotifs.length === 0 ? (
+                          <div className="p-6 text-center text-slate-400 text-sm">Chưa có thông báo nào.</div>
+                        ) : (
+                          adminNotifs.map((notif, i) => (
+                            <div 
+                              key={i} 
+                              onClick={() => { setShowNotifDropdown(false); navigate('/admin/appointments'); }}
+                              className="p-4 border-b border-slate-50 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition flex items-start gap-3"
+                            >
+                              <div className="w-8 h-8 rounded-full bg-brand-100 text-brand-600 flex items-center justify-center shrink-0">
+                                <Calendar className="w-4 h-4" />
+                              </div>
+                              <div>
+                                <p className="text-sm font-medium text-slate-800 dark:text-slate-200">
+                                  Lịch hẹn mới
+                                </p>
+                                <p className="text-xs text-slate-500 mt-0.5 line-clamp-1">
+                                  Ngày: {new Date(notif.date).toLocaleDateString('vi-VN')} - Giờ: {notif.timeSlot}
+                                </p>
+                                {notif.status === 'pending' && (
+                                  <span className="inline-block mt-1 text-[10px] bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-md font-semibold">Chờ duyệt</span>
+                                )}
+                              </div>
+                            </div>
+                          ))
+                        )}
+                      </div>
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
+            </div>
 
             <div className="w-px h-6 bg-slate-200 hidden sm:block" />
 
             {/* User */}
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl overflow-hidden shrink-0 shadow-sm ring-2 ring-teal-100">
+              <div className="w-8 h-8 rounded-xl overflow-hidden shrink-0 shadow-sm ring-2 ring-brand-100">
                 {user.avatar ? (
                   <img src={user.avatar} alt={user.fullName} className="w-full h-full object-cover" />
                 ) : (

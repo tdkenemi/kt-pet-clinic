@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 
 const statusMap = {
-  completed: { label: 'Hoàn thành', className: 'bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/20', icon: CheckCircle },
+  completed: { label: 'Hoàn thành', className: 'bg-brand-500/10 text-brand-500 ring-1 ring-brand-500/20', icon: CheckCircle },
   pending: { label: 'Chờ duyệt', className: 'bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/20', icon: Clock },
   confirmed: { label: 'Xác nhận', className: 'bg-blue-500/10 text-blue-500 ring-1 ring-blue-500/20', icon: CheckCircle },
   cancelled: { label: 'Đã hủy', className: 'bg-red-500/10 text-red-500 ring-1 ring-red-500/20', icon: XCircle },
@@ -91,7 +91,7 @@ export default function Dashboard() {
       label: 'Ca hoàn thành', value: stats.totalCompleted, icon: CheckCircle,
       trend: '+12% so với tháng trước', positive: true,
       bg: 'bg-white dark:bg-slate-900', ring: 'ring-1 ring-slate-200 dark:ring-white/10',
-      iconBg: 'bg-emerald-500/10 text-emerald-500',
+      iconBg: 'bg-brand-500/10 text-brand-500',
     },
     {
       id: 'pending',
@@ -112,9 +112,9 @@ export default function Dashboard() {
       id: 'revenue',
       label: 'Doanh thu tháng', value: `${(stats.totalRevenue / 1000000).toFixed(1)}M`, icon: DollarSign,
       trend: `${stats.paid} đã TT / ${stats.unpaid} chưa TT`, positive: true,
-      bg: 'bg-gradient-to-br from-teal-500 to-emerald-600', ring: 'ring-1 ring-teal-500/50 shadow-lg shadow-teal-500/20',
+      bg: 'bg-gradient-to-br from-brand-500 to-brand-600', ring: 'ring-1 ring-brand-500/50 shadow-lg shadow-brand-500/20',
       iconBg: 'bg-white/20 text-white',
-      textClass: 'text-white', trendClass: 'text-teal-100'
+      textClass: 'text-white', trendClass: 'text-brand-100'
     },
   ];
 
@@ -159,7 +159,7 @@ export default function Dashboard() {
               animate={{ opacity: 1, y: 0 }}
               onClick={() => setActiveChart(stat.id)}
               transition={{ delay: idx * 0.07, type: 'spring', stiffness: 300, damping: 30 }}
-              className={`relative overflow-hidden rounded-3xl p-6 cursor-pointer ${stat.bg} ${stat.ring} transition-all duration-300 hover:scale-[1.02] group ${activeChart === stat.id ? 'ring-2 ring-teal-500 dark:ring-teal-400 scale-[1.02] shadow-xl' : ''}`}
+              className={`relative overflow-hidden rounded-3xl p-6 cursor-pointer ${stat.bg} ${stat.ring} transition-all duration-300 hover:scale-[1.02] group ${activeChart === stat.id ? 'ring-2 ring-brand-500 dark:ring-brand-400 scale-[1.02] shadow-xl' : ''}`}
             >
               {isDark && <div className="absolute -right-6 -top-6 w-32 h-32 bg-white/10 blur-3xl rounded-full pointer-events-none" />}
               
@@ -168,7 +168,7 @@ export default function Dashboard() {
                   <Icon className="w-6 h-6" />
                 </div>
                 {!isDark && (
-                  <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide ${stat.positive ? 'bg-emerald-500/10 text-emerald-600' : 'bg-amber-500/10 text-amber-600'}`}>
+                  <span className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wide ${stat.positive ? 'bg-brand-500/10 text-brand-600' : 'bg-amber-500/10 text-amber-600'}`}>
                     {stat.positive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
                     Tỷ lệ
                   </span>
@@ -179,12 +179,12 @@ export default function Dashboard() {
                 <h3 className={`text-3xl font-extrabold tracking-tight mb-1 ${isDark ? 'text-white' : 'text-slate-900 dark:text-white'}`}>
                   {stat.value}
                 </h3>
-                <p className={`text-sm font-medium ${isDark ? 'text-teal-50' : 'text-slate-500 dark:text-slate-400'}`}>
+                <p className={`text-sm font-medium ${isDark ? 'text-brand-50' : 'text-slate-500 dark:text-slate-400'}`}>
                   {stat.label}
                 </p>
               </div>
 
-              <div className={`mt-4 text-xs font-medium ${stat.trendClass || (isDark ? 'text-teal-100' : 'text-slate-400 dark:text-slate-500')}`}>
+              <div className={`mt-4 text-xs font-medium ${stat.trendClass || (isDark ? 'text-brand-100' : 'text-slate-400 dark:text-slate-500')}`}>
                 {stat.trend}
               </div>
             </motion.div>
@@ -206,22 +206,22 @@ export default function Dashboard() {
               <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-1">Biểu đồ năm {new Date().getFullYear()}</p>
             </div>
             <div className="flex gap-3 text-xs font-bold tracking-wider text-slate-400 uppercase">
-              <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 bg-teal-500 rounded-full" /> {activeChart === 'revenue' ? 'Doanh thu' : 'Số lượng'}</span>
+              <span className="flex items-center gap-2"><span className="w-2.5 h-2.5 bg-brand-500 rounded-full" /> {activeChart === 'revenue' ? 'Doanh thu' : 'Số lượng'}</span>
             </div>
           </div>
           <div className="flex items-end gap-3 h-56 mt-4">
             {chartData.map((val, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-3 group h-full justify-end relative">
                 <div
-                  className="w-full max-w-[2.5rem] bg-slate-100 dark:bg-slate-800 rounded-lg group-hover:bg-teal-500/20 dark:group-hover:bg-teal-500/30 transition-all duration-300 relative overflow-hidden"
+                  className="w-full max-w-[2.5rem] bg-slate-100 dark:bg-slate-800 rounded-lg group-hover:bg-brand-500/20 dark:group-hover:bg-brand-500/30 transition-all duration-300 relative overflow-hidden"
                   style={{ height: `${Math.max((val / maxChart) * 100, 4)}%` }}
                 >
-                  <div className="absolute bottom-0 left-0 w-full h-full bg-teal-500 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                  <div className="absolute bottom-0 left-0 w-full h-full bg-brand-500 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
                 </div>
                 <div className="absolute -top-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-[10px] font-bold rounded shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0 whitespace-nowrap z-10 pointer-events-none">
                   {activeChart === 'revenue' ? (val > 0 ? `${(val/1000000).toFixed(1)}M` : '0') : val}
                 </div>
-                <span className={`text-xs font-bold tracking-wider ${i === new Date().getMonth() ? 'text-teal-600 dark:text-teal-400' : 'text-slate-400 dark:text-slate-500'}`}>{months[i]}</span>
+                <span className={`text-xs font-bold tracking-wider ${i === new Date().getMonth() ? 'text-brand-600 dark:text-brand-400' : 'text-slate-400 dark:text-slate-500'}`}>{months[i]}</span>
               </div>
             ))}
           </div>
@@ -231,7 +231,7 @@ export default function Dashboard() {
         <div className="xl:col-span-2 bg-white dark:bg-slate-900 rounded-3xl ring-1 ring-slate-200 dark:ring-white/10 shadow-sm flex flex-col overflow-hidden relative">
           <div className="p-6 border-b border-slate-100 dark:border-white/5 flex justify-between items-center bg-white/50 dark:bg-slate-900/50 backdrop-blur-md z-10">
             <h3 className="text-lg font-bold tracking-tight text-slate-900 dark:text-white">Lịch mới nhất</h3>
-            <Link to="/admin/appointments" className="text-sm font-bold text-teal-600 dark:text-teal-400 hover:text-teal-700 transition">
+            <Link to="/admin/appointments" className="text-sm font-bold text-brand-600 dark:text-brand-400 hover:text-brand-700 transition">
               Tất cả &rarr;
             </Link>
           </div>
@@ -274,7 +274,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { to: '/admin/appointments', icon: Calendar, label: 'Duyệt lịch hẹn', desc: 'Quản lý lịch đặt', color: 'text-blue-500', bg: 'bg-blue-500/10' },
-          { to: '/admin/revenue', icon: DollarSign, label: 'Doanh thu', desc: 'Báo cáo tài chính', color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+          { to: '/admin/revenue', icon: DollarSign, label: 'Doanh thu', desc: 'Báo cáo tài chính', color: 'text-brand-500', bg: 'bg-brand-500/10' },
           { to: '/admin/pets', icon: PawPrint, label: 'Hồ sơ', desc: 'Quản lý thú cưng', color: 'text-violet-500', bg: 'bg-violet-500/10' },
           { to: '/admin/services', icon: Activity, label: 'Dịch vụ', desc: 'Cấu hình giá', color: 'text-amber-500', bg: 'bg-amber-500/10' },
         ].map((qa, idx) => {
@@ -283,13 +283,13 @@ export default function Dashboard() {
             <Link
               key={qa.to}
               to={qa.to}
-              className="bg-white dark:bg-slate-900 rounded-3xl p-5 ring-1 ring-slate-200 dark:ring-white/10 hover:ring-teal-500/50 hover:shadow-lg hover:shadow-teal-500/10 transition-all duration-300 group flex flex-col justify-between aspect-video"
+              className="bg-white dark:bg-slate-900 rounded-3xl p-5 ring-1 ring-slate-200 dark:ring-white/10 hover:ring-brand-500/50 hover:shadow-lg hover:shadow-brand-500/10 transition-all duration-300 group flex flex-col justify-between aspect-video"
             >
               <div className={`w-10 h-10 rounded-2xl ${qa.bg} flex items-center justify-center shrink-0 mb-4 group-hover:scale-110 transition-transform duration-300`}>
                 <QAIcon className={`w-5 h-5 ${qa.color}`} />
               </div>
               <div>
-                <span className="block text-base font-bold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition">{qa.label}</span>
+                <span className="block text-base font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition">{qa.label}</span>
                 <span className="block text-xs font-medium text-slate-500 mt-1">{qa.desc}</span>
               </div>
             </Link>

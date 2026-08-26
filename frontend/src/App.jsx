@@ -3,6 +3,7 @@ import { Topbar } from "./components/Topbar";
 import Footer from "./components/Footer";
 import { FloatingContactWidget } from "./components/FloatingContactWidget";
 import { FloatingChatbot } from "./components/FloatingChatbot";
+import { ChatWidget } from "./components/ChatWidget";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Footer />
       <FloatingContactWidget />
       <FloatingChatbot />
+      <ChatWidget />
     </div>
   );
 }

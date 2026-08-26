@@ -255,7 +255,7 @@ export default function MyAppointments() {
                             </span>
                           )}
                           {app.billingDetails?.vetName && (
-                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-teal-50 text-teal-700 px-2 py-0.5 rounded">
+                            <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-brand-50 text-brand-700 px-2 py-0.5 rounded">
                               👨‍⚕️ BS. {app.billingDetails.vetName}
                             </span>
                           )}
@@ -286,7 +286,7 @@ export default function MyAppointments() {
                         <span className="text-xs text-slate-400">Tổng chi phí</span>
                         <div className="flex items-center gap-2">
                           {app.paymentStatus === 'Paid' ? (
-                            <span className="inline-flex items-center text-[10px] font-bold bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-md"><CheckCircle className="w-3 h-3 mr-1" /> Đã thanh toán ({app.paymentMethod})</span>
+                            <span className="inline-flex items-center text-[10px] font-bold bg-brand-100 text-brand-700 px-2 py-0.5 rounded-md"><CheckCircle className="w-3 h-3 mr-1" /> Đã thanh toán ({app.paymentMethod})</span>
                           ) : (app.status === 'completed' || app.status === 'confirmed') ? (
                             <span className="inline-flex items-center text-[10px] font-bold bg-amber-100 text-amber-700 px-2 py-0.5 rounded-md">
                               Chưa thanh toán {app.paymentMethod && app.paymentMethod !== 'Unpaid' ? `(${app.paymentMethod})` : ''}
@@ -335,7 +335,7 @@ export default function MyAppointments() {
                         
                         <div className="flex justify-end">
                           {selectedApt.paymentStatus === 'Paid' ? (
-                            <div className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-emerald-100 text-emerald-800 rounded-xl border border-emerald-200">
+                            <div className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-brand-100 text-brand-800 rounded-xl border border-brand-200">
                               <CheckCircle className="w-5 h-5" />
                               <span className="font-bold">Đã thanh toán ({selectedApt.paymentMethod})</span>
                             </div>

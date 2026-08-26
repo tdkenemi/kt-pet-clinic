@@ -142,7 +142,7 @@ export default function Login() {
           alt="Happy pets"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-teal-900/85 via-teal-800/75 to-slate-900/90" />
+        <div className="absolute inset-0 bg-gradient-to-br from-brand-900/85 via-brand-800/75 to-slate-900/90" />
         <div className="relative z-10 flex flex-col justify-between p-12 text-white h-full">
           <div className="flex items-center gap-3">
             <div className="w-11 h-11 bg-white/15 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-white/20">
@@ -156,13 +156,13 @@ export default function Login() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
             >
-              <span className="inline-block px-3 py-1 bg-teal-400/20 text-teal-200 text-xs font-semibold rounded-full border border-teal-400/30 mb-4">
+              <span className="inline-block px-3 py-1 bg-brand-400/20 text-brand-200 text-xs font-semibold rounded-full border border-brand-400/30 mb-4">
                 🐾 Phòng khám thú cưng hàng đầu
               </span>
               <h2 className="text-4xl font-black mb-4 leading-tight tracking-tight">
                 Sức khỏe thú cưng<br />là ưu tiên của chúng tôi
               </h2>
-              <p className="text-teal-100/80 leading-relaxed text-base">
+              <p className="text-brand-100/80 leading-relaxed text-base">
                 Đặt lịch khám, theo dõi hồ sơ và nhận thông báo từ bác sĩ — tất cả trong một ứng dụng.
               </p>
             </motion.div>
@@ -176,7 +176,7 @@ export default function Login() {
                   className="bg-white/10 rounded-2xl p-4 text-center backdrop-blur-sm border border-white/10"
                 >
                   <div className="text-2xl font-black text-white">{v}</div>
-                  <div className="text-xs text-teal-200 mt-1">{l}</div>
+                  <div className="text-xs text-brand-200 mt-1">{l}</div>
                 </motion.div>
               ))}
             </div>
@@ -290,7 +290,7 @@ export default function Login() {
                         <button
                           type="button"
                           onClick={() => switchTab('forgot')}
-                          className="text-xs text-teal-600 hover:text-teal-700 font-medium hover:underline transition"
+                          className="text-xs text-brand-600 hover:text-brand-700 font-medium hover:underline transition"
                         >
                           Quên mật khẩu?
                         </button>
@@ -342,7 +342,7 @@ export default function Login() {
 
                 <p className="text-center text-xs text-slate-400 mt-6">
                   Bằng cách đăng nhập, bạn đồng ý với{' '}
-                  <span className="text-teal-600 hover:underline cursor-pointer">Điều khoản sử dụng</span>
+                  <span className="text-brand-600 hover:underline cursor-pointer">Điều khoản sử dụng</span>
                 </p>
               </motion.div>
             )}
@@ -372,14 +372,14 @@ export default function Login() {
                     <React.Fragment key={s}>
                       <div className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold transition-all ${
                         forgotStep > s
-                          ? 'bg-teal-600 text-white'
+                          ? 'bg-brand-600 text-white'
                           : forgotStep === s
-                          ? 'bg-teal-600 text-white shadow-teal ring-4 ring-teal-100'
+                          ? 'bg-brand-600 text-white shadow-teal ring-4 ring-brand-100'
                           : 'bg-slate-200 text-slate-400'
                       }`}>
                         {forgotStep > s ? <CheckCircle className="w-4 h-4" /> : s}
                       </div>
-                      {s < 3 && <div className={`flex-1 h-0.5 transition-all ${forgotStep > s ? 'bg-teal-500' : 'bg-slate-200'}`} />}
+                      {s < 3 && <div className={`flex-1 h-0.5 transition-all ${forgotStep > s ? 'bg-brand-500' : 'bg-slate-200'}`} />}
                     </React.Fragment>
                   ))}
                 </div>
@@ -398,8 +398,8 @@ export default function Login() {
                   {forgotStep === 1 && (
                     <motion.div key="step1" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}>
                       <div className="mb-6">
-                        <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4 border border-teal-100">
-                          <Mail className="w-7 h-7 text-teal-600" />
+                        <div className="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-4 border border-brand-100">
+                          <Mail className="w-7 h-7 text-brand-600" />
                         </div>
                         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Quên mật khẩu</h2>
                         <p className="text-slate-500 mt-1.5 text-sm">Nhập email tài khoản để nhận mã xác nhận OTP.</p>
@@ -427,8 +427,8 @@ export default function Login() {
                   {forgotStep === 2 && (
                     <motion.div key="step2" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}>
                       <div className="mb-6">
-                        <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4 border border-teal-100">
-                          <KeyRound className="w-7 h-7 text-teal-600" />
+                        <div className="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-4 border border-brand-100">
+                          <KeyRound className="w-7 h-7 text-brand-600" />
                         </div>
                         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Nhập mã OTP</h2>
                         <p className="text-slate-500 mt-1.5 text-sm">
@@ -457,7 +457,7 @@ export default function Login() {
                         <button
                           type="button"
                           onClick={() => { setForgotStep(1); setDevOtp(''); setForgotOtp(''); }}
-                          className="w-full text-center text-sm text-slate-500 hover:text-teal-600 transition flex items-center justify-center gap-1.5"
+                          className="w-full text-center text-sm text-slate-500 hover:text-brand-600 transition flex items-center justify-center gap-1.5"
                         >
                           <RefreshCw className="w-3.5 h-3.5" /> Gửi lại mã
                         </button>
@@ -469,8 +469,8 @@ export default function Login() {
                   {forgotStep === 3 && (
                     <motion.div key="step3" initial={{ opacity: 0, x: 16 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -16 }}>
                       <div className="mb-6">
-                        <div className="w-14 h-14 bg-teal-50 rounded-2xl flex items-center justify-center mb-4 border border-teal-100">
-                          <Lock className="w-7 h-7 text-teal-600" />
+                        <div className="w-14 h-14 bg-brand-50 rounded-2xl flex items-center justify-center mb-4 border border-brand-100">
+                          <Lock className="w-7 h-7 text-brand-600" />
                         </div>
                         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Mật khẩu mới</h2>
                         <p className="text-slate-500 mt-1.5 text-sm">Đặt mật khẩu mới cho tài khoản của bạn.</p>
@@ -512,8 +512,8 @@ export default function Login() {
                   {/* STEP 4 — Thành công */}
                   {forgotStep === 4 && (
                     <motion.div key="step4" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-8">
-                      <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-teal-100">
-                        <CheckCircle className="w-10 h-10 text-teal-600" />
+                      <div className="w-20 h-20 bg-brand-50 rounded-full flex items-center justify-center mx-auto mb-4 border-4 border-brand-100">
+                        <CheckCircle className="w-10 h-10 text-brand-600" />
                       </div>
                       <h2 className="text-2xl font-black text-slate-900 mb-2">Thành công!</h2>
                       <p className="text-slate-500 text-sm">Mật khẩu đã được đặt lại. Đang chuyển về trang đăng nhập...</p>

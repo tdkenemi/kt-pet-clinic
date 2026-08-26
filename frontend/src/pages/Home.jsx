@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import {
-  CalendarCheck, ShieldCheck, HeartPulse, Clock, Activity,
-  Users, ArrowRight, Star, Phone, MapPin, CheckCircle, Sparkles,
-  PawPrint, Stethoscope, Scissors, Heart, ChevronLeft, ChevronRight
+  CalendarCheck, ShieldCheck, Clock, Activity,
+  ArrowRight, Star, Phone, MapPin, Sparkles,
+  PawPrint, Stethoscope, Scissors, Heart
 } from 'lucide-react';
 
 const heroImages = [
@@ -15,35 +15,31 @@ const heroImages = [
 ];
 
 const stats = [
-  { label: 'Khách hàng', value: '5K+', icon: '👥' },
-  { label: 'Ca khám', value: '12K+', icon: '🩺' },
-  { label: 'Năm KN', value: '8+', icon: '⭐' },
-  { label: 'Bác sĩ', value: '15', icon: '🏥' },
+  { label: 'Khách hàng', value: '5K+' },
+  { label: 'Ca khám', value: '12K+' },
+  { label: 'Năm KN', value: '8+' },
+  { label: 'Bác sĩ', value: '15' },
 ];
 
 const services = [
-  { icon: Stethoscope, title: 'Khám Tổng Quát', desc: 'Kiểm tra sức khỏe định kỳ, tiêm phòng và tư vấn dinh dưỡng chi tiết cho thú cưng.', service: 'Khám Tổng Quát', color: 'from-teal-500 to-cyan-500', badge: 'Phổ biến' },
-  { icon: Clock, title: 'Cấp Cứu 24/7', desc: 'Sẵn sàng tiếp nhận các ca bệnh khẩn cấp bất kể ngày đêm, đội ngũ luôn trực sẵn.', service: 'Cấp Cứu 24/7', color: 'from-red-500 to-orange-500', badge: '24/7' },
-  { icon: ShieldCheck, title: 'Phẫu Thuật', desc: 'Trang thiết bị hiện đại, phòng mổ vô trùng. Đảm bảo an toàn tuyệt đối.', service: 'Phẫu Thuật Y Khoa', color: 'from-violet-500 to-indigo-500', badge: 'HĐ' },
-  { icon: Scissors, title: 'Grooming & Spa', desc: 'Cắt tỉa lông chuyên nghiệp, tắm thơm và chăm sóc sắc đẹp. Thú cưng luôn xinh đẹp.', service: 'Grooming & Spa', color: 'from-pink-500 to-rose-500', badge: '✨' },
-  { icon: Activity, title: 'Xét Nghiệm & CT', desc: 'Chẩn đoán chính xác với máy X-quang, siêu âm và hệ thống xét nghiệm hiện đại.', service: 'Xét Nghiệm - CT', color: 'from-amber-500 to-orange-500', badge: 'Hi-tech' },
-  { icon: Heart, title: 'Nội Khoa', desc: 'Điều trị các bệnh lý nội khoa phức tạp với phác đồ khoa học, theo dõi liên tục.', service: 'Nội Khoa', color: 'from-emerald-500 to-teal-500', badge: 'Chuyên sâu' },
+  { icon: Stethoscope, title: 'Khám Tổng Quát', desc: 'Kiểm tra sức khỏe định kỳ, tiêm phòng và tư vấn dinh dưỡng chi tiết.', service: 'Khám Tổng Quát', color: 'text-brand-500 bg-brand-50' },
+  { icon: Clock, title: 'Cấp Cứu 24/7', desc: 'Đội ngũ trực ban sẵn sàng tiếp nhận các ca bệnh khẩn cấp bất kể ngày đêm.', service: 'Cấp Cứu 24/7', color: 'text-red-500 bg-red-50' },
+  { icon: ShieldCheck, title: 'Phẫu Thuật', desc: 'Trang thiết bị phòng mổ hiện đại, vô trùng. Đảm bảo an toàn tuyệt đối.', service: 'Phẫu Thuật Y Khoa', color: 'text-indigo-500 bg-indigo-50' },
+  { icon: Scissors, title: 'Grooming & Spa', desc: 'Cắt tỉa lông chuyên nghiệp, chăm sóc sắc đẹp, cắt móng cho thú cưng.', service: 'Grooming & Spa', color: 'text-pink-500 bg-pink-50' },
+  { icon: Activity, title: 'Xét Nghiệm & CT', desc: 'Chẩn đoán chính xác với máy X-quang, siêu âm và hệ thống xét nghiệm tiên tiến.', service: 'Xét Nghiệm - CT', color: 'text-gold-600 bg-gold-50' },
+  { icon: Heart, title: 'Nội Khoa', desc: 'Điều trị bệnh lý nội khoa phức tạp với phác đồ khoa học, theo dõi sát sao.', service: 'Nội Khoa', color: 'text-brand-600 bg-brand-100' },
 ];
 
 const testimonials = [
-  { name: 'Nguyễn Thị Lan', pet: 'Cún Golden', text: 'Đội ngũ bác sĩ rất tận tâm! Bé Max nhà tôi được chăm sóc rất tốt, từ khâu đặt lịch đến khi khám xong.', avatar: '🐕', rating: 5 },
-  { name: 'Trần Văn Hùng', pet: 'Mèo Maine Coon', text: 'Dịch vụ tốt, phòng khám sạch sẽ và hiện đại. Bác sĩ giải thích chi tiết tình trạng sức khỏe của bé.', avatar: '🐈', rating: 5 },
-  { name: 'Phạm Minh Châu', pet: 'Thỏ Hà Lan', text: 'Rất hài lòng với dịch vụ đặt lịch online tiện lợi. Không cần chờ đợi, đúng giờ là vào khám ngay.', avatar: '🐇', rating: 5 },
-  { name: 'Lê Thu Hà', pet: 'Hamster', text: 'Là phòng khám duy nhất ở khu vực tôi chấp nhận khám hamster. Bác sĩ rất hiểu bé!', avatar: '🐹', rating: 5 },
+  { name: 'Nguyễn Thị Lan', pet: 'Cún Golden', text: 'Đội ngũ bác sĩ rất tận tâm! Bé Max nhà tôi được chăm sóc tuyệt vời, từ khâu đặt lịch đến khi khám xong, mọi thứ đều mượt mà và chuyên nghiệp.', avatar: '🐕', rating: 5 },
+  { name: 'Trần Văn Hùng', pet: 'Mèo Maine Coon', text: 'Dịch vụ vô cùng đẳng cấp, phòng khám sạch sẽ và hiện đại. Bác sĩ giải thích rất chi tiết tình trạng sức khỏe của bé.', avatar: '🐈', rating: 5 },
 ];
 
 const whyUs = [
-  { icon: '🏥', title: 'Cơ sở vật chất hiện đại', desc: 'Trang thiết bị y tế nhập khẩu, phòng khám đạt tiêu chuẩn quốc tế' },
-  { icon: '🩺', title: 'Bác sĩ giàu kinh nghiệm', desc: 'Đội ngũ 15+ bác sĩ thú y được đào tạo bài bản trong và ngoài nước' },
-  { icon: '📱', title: 'Đặt lịch siêu tiện', desc: 'Đặt lịch online 24/7, nhận thông báo qua SMS và email tức thì' },
-  { icon: '💰', title: 'Giá cả minh bạch', desc: 'Báo giá trước khi khám, thanh toán tiện lợi qua QR code hoặc tiền mặt' },
-  { icon: '🚗', title: 'Khám tại nhà', desc: 'Bác sĩ đến tận nơi nếu thú cưng của bạn không thể di chuyển' },
-  { icon: '❤️', title: 'Chăm sóc tận tâm', desc: 'Đối xử với mọi thú cưng như thành viên gia đình' },
+  { title: 'Cơ sở vật chất chuẩn quốc tế', desc: 'Hệ thống trang thiết bị y tế nhập khẩu từ Đức & Mỹ. Môi trường vô trùng tuyệt đối.' },
+  { title: 'Đội ngũ bác sĩ chuyên gia', desc: '15+ chuyên gia thú y được đào tạo chuyên sâu trong và ngoài nước, tận tâm với nghề.' },
+  { title: 'Dịch vụ khám tại nhà', desc: 'Hỗ trợ thăm khám tận nơi cho các ca bệnh khó di chuyển, tiện lợi và an toàn.' },
+  { title: 'Bảng giá minh bạch', desc: 'Mọi chi phí được thông báo rõ ràng trước khi điều trị, không phát sinh phụ phí.' },
 ];
 
 export default function Home() {
@@ -57,7 +53,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const timer = setInterval(() => setTestimonialIdx(i => (i + 1) % testimonials.length), 4000);
+    const timer = setInterval(() => setTestimonialIdx(i => (i + 1) % testimonials.length), 6000);
     return () => clearInterval(timer);
   }, []);
 
@@ -69,355 +65,313 @@ export default function Home() {
     initial: { opacity: 0, y: 30 },
     whileInView: { opacity: 1, y: 0 },
     viewport: { once: true, margin: '-60px' },
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+    transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
   };
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-hidden bg-white dark:bg-[#0f1115]">
       {/* ====== HERO ====== */}
-      <section className="relative h-[92vh] min-h-[620px] flex items-center overflow-hidden">
+      <section className="relative h-[95vh] min-h-[650px] flex items-center overflow-hidden">
         {/* Background slideshow */}
         <AnimatePresence mode="wait">
           <motion.div
             key={heroIdx}
-            initial={{ opacity: 0, scale: 1.04 }}
+            initial={{ opacity: 0, scale: 1.05 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 1.2, ease: 'easeInOut' }}
+            transition={{ duration: 1.5, ease: 'easeInOut' }}
             className="absolute inset-0"
           >
             <img
               src={heroImages[heroIdx]}
               alt="KT Pet Clinic"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-cover will-change-transform"
             />
           </motion.div>
         </AnimatePresence>
 
-        {/* Gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/60 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-transparent" />
+        {/* Gradient overlay - much cleaner, deeper contrast */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/60 to-transparent opacity-90" />
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 w-full pb-24 sm:pb-28">
+        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full pt-12">
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="max-w-xl"
+            transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+            className="max-w-2xl"
           >
-            <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-teal-500/20 text-teal-300 text-xs font-semibold rounded-full border border-teal-500/30 mb-5 backdrop-blur-sm">
+            <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 text-brand-100 text-xs font-bold tracking-[0.2em] uppercase rounded-full border border-white/10 mb-8 backdrop-blur-md">
               <Sparkles className="w-3.5 h-3.5" />
-              Phòng khám thú cưng hàng đầu TP.HCM
+              Đẳng cấp chăm sóc thú cưng
             </span>
 
-            <h1 className="text-5xl md:text-6xl font-black text-white leading-[1.1] tracking-tight mb-6">
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.05] tracking-tight mb-8">
               Sức khoẻ<br />
-              <span className="text-gradient-teal">thú cưng</span><br />
+              <span className="text-brand-400">thú cưng</span><br />
               của bạn
             </h1>
 
-            <p className="text-slate-300 text-lg leading-relaxed mb-8 max-w-md">
-              Đội ngũ bác sĩ chuyên nghiệp, trang thiết bị hiện đại. Đặt lịch khám online, thanh toán QR tiện lợi.
+            <p className="text-slate-300 text-lg md:text-xl leading-relaxed mb-10 max-w-lg font-light">
+              Môi trường y tế vô trùng, trang thiết bị hiện đại bậc nhất. Trải nghiệm dịch vụ thú y tiêu chuẩn quốc tế.
             </p>
 
-            <div className="flex flex-wrap gap-3">
-              <Link to="/booking" className="btn-primary py-3.5 px-7 text-base shine">
+            <div className="flex flex-wrap gap-4">
+              <Link to="/booking" className="btn-primary py-4 px-8 text-base">
                 <CalendarCheck className="w-5 h-5" />
-                Đặt lịch ngay
+                Đặt lịch khám ngay
               </Link>
-              <a href="tel:0901234567" className="flex items-center gap-2 py-3.5 px-7 bg-white/10 hover:bg-white/20 backdrop-blur-sm rounded-xl text-white font-semibold border border-white/20 transition text-base">
+              <a href="tel:0901234567" className="btn-ghost text-white hover:text-slate-900 hover:bg-white py-4 px-8 text-base bg-white/5 border border-white/10 backdrop-blur-sm">
                 <Phone className="w-5 h-5" />
-                Gọi ngay
+                Hotline 24/7
               </a>
             </div>
           </motion.div>
         </div>
 
-        {/* Stats bar */}
+        {/* Stats bar - Floating elegant block */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.7 }}
-          className="absolute bottom-0 left-0 right-0 z-10"
+          transition={{ delay: 0.6, duration: 0.8 }}
+          className="absolute bottom-10 left-6 right-6 md:left-12 md:right-auto z-10"
         >
-          <div className="max-w-4xl mx-auto px-6">
-            <div className="grid grid-cols-4 divide-x divide-white/10 bg-white/10 backdrop-blur-xl rounded-t-2xl border border-white/15 border-b-0 overflow-hidden">
-              {stats.map(({ label, value, icon }) => (
-                <div key={label} className="flex flex-col items-center py-5 px-4">
-                  <span className="text-2xl mb-1">{icon}</span>
-                  <span className="text-2xl font-black text-white">{value}</span>
-                  <span className="text-xs text-slate-300 font-medium mt-0.5">{label}</span>
-                </div>
-              ))}
-            </div>
+          <div className="flex items-center gap-8 md:gap-16 py-6 px-10 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl">
+            {stats.map(({ label, value }) => (
+              <div key={label} className="flex flex-col">
+                <span className="text-3xl md:text-4xl font-black text-white mb-1 tracking-tight">{value}</span>
+                <span className="text-xs text-brand-200 font-medium uppercase tracking-widest">{label}</span>
+              </div>
+            ))}
           </div>
         </motion.div>
 
-        {/* Slide dots */}
-        <div className="absolute right-6 top-1/2 -translate-y-1/2 flex flex-col gap-2 z-10">
+        {/* Slide indicators */}
+        <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10">
           {heroImages.map((_, i) => (
             <button
               key={i}
               onClick={() => setHeroIdx(i)}
-              className={`w-1.5 rounded-full transition-all duration-300 ${i === heroIdx ? 'h-8 bg-teal-400' : 'h-3 bg-white/30'}`}
+              className={`w-1 rounded-full transition-all duration-500 ${i === heroIdx ? 'h-12 bg-brand-400' : 'h-4 bg-white/20 hover:bg-white/40'}`}
+              aria-label={`Go to slide ${i + 1}`}
             />
           ))}
         </div>
       </section>
 
-      {/* ====== SERVICES ====== */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <motion.div {...fadeUp} className="text-center mb-12">
-            <span className="section-label">Dịch vụ của chúng tôi</span>
-            <h2 className="text-4xl font-black text-slate-900 tracking-tight">
-              Chăm sóc <span className="text-gradient-teal">toàn diện</span>
+      {/* ====== SERVICES - Elegant Grid ====== */}
+      <section className="py-24 lg:py-32 bg-slate-50 dark:bg-[#0f1115]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <motion.div {...fadeUp} className="max-w-3xl mb-16 lg:mb-24">
+            <span className="section-label">Chuyên khoa</span>
+            <h2 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white leading-tight">
+              Dịch vụ y tế <br className="hidden md:block" />
+              <span className="text-brand-600 dark:text-brand-400">chuyên sâu & toàn diện</span>
             </h2>
-            <p className="text-slate-500 mt-3 max-w-md mx-auto">
-              Từ khám định kỳ đến phẫu thuật phức tạp — mọi nhu cầu của thú cưng đều được đáp ứng.
-            </p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {services.map((svc, idx) => {
               const Icon = svc.icon;
               return (
                 <motion.div
                   key={svc.title}
                   {...fadeUp}
-                  transition={{ delay: idx * 0.07, duration: 0.5 }}
-                  className="card-hover group p-6 relative overflow-hidden"
+                  transition={{ delay: idx * 0.1, duration: 0.6 }}
+                  className="group bg-white dark:bg-[#1a1d24] p-8 rounded-3xl border border-slate-200/60 dark:border-white/5 hover:border-brand-200 dark:hover:border-brand-900/50 transition-all duration-300 hover:shadow-float relative overflow-hidden will-change-transform"
                 >
-                  {/* Badge */}
-                  <span className="absolute top-4 right-4 text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-500">
-                    {svc.badge}
-                  </span>
-
-                  {/* Icon */}
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-4 bg-gradient-to-br ${svc.color} group-hover:scale-110 transition-transform duration-300`}>
-                    <Icon className="w-6 h-6 text-white" />
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${svc.color} transition-transform duration-500 group-hover:scale-110 group-hover:rotate-3`}>
+                    <Icon className="w-7 h-7" />
                   </div>
-
-                  <h3 className="font-bold text-slate-900 text-lg mb-2 group-hover:text-teal-700 transition-colors">{svc.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed mb-4">{svc.desc}</p>
+                  <h3 className="font-bold text-slate-900 dark:text-white text-xl mb-3">{svc.title}</h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed mb-8">{svc.desc}</p>
 
                   <Link
                     to={`/booking?service=${encodeURIComponent(svc.service)}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold text-teal-600 hover:text-teal-700 hover:gap-2 transition-all"
+                    className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 dark:text-white hover:text-brand-600 dark:hover:text-brand-400 transition-colors uppercase tracking-wide"
                   >
-                    Đặt lịch ngay <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                    Đặt lịch <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
                   </Link>
-
-                  {/* Hover gradient bar */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${svc.color} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300`} />
                 </motion.div>
               );
             })}
           </div>
-
-          <motion.div {...fadeUp} className="text-center mt-8">
-            <Link to="/booking" className="btn-secondary inline-flex py-3 px-8">
-              Xem tất cả dịch vụ <ArrowRight className="w-4 h-4" />
-            </Link>
-          </motion.div>
         </div>
       </section>
 
-      {/* ====== WHY US ====== */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div {...fadeUp}>
-              <span className="section-label">Tại sao chọn chúng tôi</span>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-6">
-                Chúng tôi khác biệt<br />
-                ở <span className="text-gradient-teal">sự tận tâm</span>
+      {/* ====== WHY US - Editorial Layout ====== */}
+      <section className="py-24 lg:py-32 bg-white dark:bg-[#0a0c0f]">
+        <div className="max-w-7xl mx-auto px-6 md:px-12">
+          <div className="grid lg:grid-cols-12 gap-12 lg:gap-24 items-center">
+            
+            {/* Image Block - 5 cols */}
+            <motion.div
+              {...fadeUp}
+              className="lg:col-span-5 relative"
+            >
+              <div className="aspect-[3/4] rounded-3xl overflow-hidden relative shadow-2xl">
+                <img
+                  src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=800&auto=format&fit=crop"
+                  alt="Veterinarian with dog"
+                  className="w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-brand-900/10 mix-blend-multiply" />
+              </div>
+              
+              <div className="absolute -bottom-8 -right-8 bg-white dark:bg-[#1a1d24] p-6 rounded-3xl shadow-xl border border-slate-100 dark:border-white/5 max-w-[240px]">
+                <div className="flex gap-1 mb-2">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-gold-500 text-gold-500" />
+                  ))}
+                </div>
+                <p className="font-bold text-slate-900 dark:text-white leading-snug">Top 1 phòng khám được yêu thích nhất TP.HCM</p>
+              </div>
+            </motion.div>
+
+            {/* Text Block - 7 cols */}
+            <motion.div {...fadeUp} className="lg:col-span-7 pt-12 lg:pt-0">
+              <span className="section-label">Triết lý hoạt động</span>
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-12">
+                Không chỉ là y tế, <br />
+                đó là <span className="text-brand-600 dark:text-brand-400">tình yêu thương</span>
               </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                {whyUs.map(({ icon, title, desc }, idx) => (
-                  <motion.div
-                    key={title}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.08 }}
-                    className="flex items-start gap-3 p-4 rounded-2xl hover:bg-teal-50/60 hover:border-teal-200 border border-transparent transition-all"
-                  >
-                    <span className="text-2xl shrink-0">{icon}</span>
-                    <div>
-                      <h4 className="font-bold text-slate-800 text-sm">{title}</h4>
-                      <p className="text-slate-500 text-xs mt-0.5 leading-relaxed">{desc}</p>
-                    </div>
-                  </motion.div>
+              
+              <div className="grid sm:grid-cols-2 gap-x-8 gap-y-10">
+                {whyUs.map(({ title, desc }, idx) => (
+                  <div key={idx} className="relative pl-6">
+                    <div className="absolute top-1.5 left-0 w-1.5 h-1.5 rounded-full bg-brand-500" />
+                    <h4 className="font-bold text-slate-900 dark:text-white text-lg mb-2">{title}</h4>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{desc}</p>
+                  </div>
                 ))}
               </div>
             </motion.div>
 
-            {/* Image collage */}
-            <motion.div
-              {...fadeUp}
-              transition={{ delay: 0.2 }}
-              className="relative h-[500px] hidden lg:block"
-            >
-              <img
-                src="https://images.unsplash.com/photo-1628009368231-7bb7cfcb0def?q=80&w=800&auto=format&fit=crop"
-                alt="Vet examining pet"
-                className="absolute top-0 left-0 w-[65%] h-[65%] rounded-3xl object-cover shadow-xl"
-              />
-              <img
-                src="https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=800&auto=format&fit=crop"
-                alt="Happy pets"
-                className="absolute bottom-0 right-0 w-[60%] h-[55%] rounded-3xl object-cover shadow-xl"
-              />
-              {/* Floating card */}
-              <div className="absolute bottom-[30%] left-[15%] card-glass px-4 py-3 rounded-2xl z-10">
-                <div className="flex items-center gap-2">
-                  <span className="text-2xl">🏆</span>
-                  <div>
-                    <p className="text-xs font-bold text-slate-800">Top 1 TP.HCM</p>
-                    <div className="flex gap-0.5">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-3 h-3 fill-amber-400 text-amber-400" />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
           </div>
         </div>
       </section>
 
       {/* ====== TEAM ====== */}
       {staffs.length > 0 && (
-        <section className="py-20 bg-slate-50">
-          <div className="max-w-7xl mx-auto px-6 md:px-10">
-            <motion.div {...fadeUp} className="text-center mb-12">
-              <span className="section-label">Đội ngũ y tế</span>
-              <h2 className="text-4xl font-black text-slate-900 tracking-tight">
-                Gặp gỡ <span className="text-gradient-teal">bác sĩ</span> của chúng tôi
-              </h2>
-            </motion.div>
+        <section className="py-24 lg:py-32 bg-slate-50 dark:bg-[#0f1115]">
+          <div className="max-w-7xl mx-auto px-6 md:px-12">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+              <motion.div {...fadeUp} className="max-w-xl">
+                <span className="section-label">Chuyên gia</span>
+                <h2 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+                  Đội ngũ y bác sĩ
+                </h2>
+              </motion.div>
+              <motion.div {...fadeUp}>
+                <Link to="/about" className="text-brand-600 dark:text-brand-400 font-bold hover:text-brand-700 flex items-center gap-2">
+                  Xem toàn bộ <ArrowRight className="w-4 h-4" />
+                </Link>
+              </motion.div>
+            </div>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {staffs.map((s, idx) => (
                 <motion.div
                   key={s._id}
-                  initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ delay: idx * 0.1 }}
-                  className="card text-center p-5 group hover:-translate-y-2 transition-all duration-300 hover:shadow-lg"
+                  transition={{ delay: idx * 0.1, duration: 0.6 }}
+                  className="group relative rounded-3xl overflow-hidden aspect-[3/4] bg-slate-200 dark:bg-slate-800"
                 >
-                  <div className="w-20 h-20 rounded-2xl overflow-hidden mx-auto mb-4 shadow-md ring-2 ring-teal-100 group-hover:ring-teal-300 transition-all">
-                    {s.image ? (
-                      <img src={s.image} alt={s.name} className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="w-full h-full avatar-initials text-2xl font-black">
-                        {s.name?.charAt(0)?.toUpperCase()}
-                      </div>
-                    )}
+                  {s.image ? (
+                    <img src={s.image} alt={s.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 grayscale group-hover:grayscale-0 will-change-transform" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center bg-slate-100 dark:bg-slate-800">
+                      <PawPrint className="w-12 h-12 text-slate-300 dark:text-slate-600" />
+                    </div>
+                  )}
+                  
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/20 to-transparent opacity-80" />
+                  
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h3 className="font-bold text-white text-xl mb-1">{s.name}</h3>
+                    <p className="text-brand-300 text-sm font-medium">
+                      {s.role === 'Veterinarian' ? 'Bác sĩ Thú y' :
+                       s.role === 'Groomer' ? 'Chuyên gia Grooming' :
+                       s.role === 'Nurse' ? 'Điều dưỡng' : s.role}
+                    </p>
                   </div>
-                  <h3 className="font-bold text-slate-900 text-sm">{s.name}</h3>
-                  <p className="text-xs text-teal-600 mt-1 font-medium">
-                    {s.role === 'Veterinarian' ? 'Bác sĩ Thú y' :
-                     s.role === 'Groomer' ? 'Chuyên viên Grooming' :
-                     s.role === 'Nurse' ? 'Y tá' : s.role}
-                  </p>
                 </motion.div>
               ))}
-            </div>
-
-            <div className="text-center mt-8">
-              <Link to="/about" className="btn-secondary inline-flex py-3 px-8">
-                Xem toàn bộ đội ngũ <ArrowRight className="w-4 h-4" />
-              </Link>
             </div>
           </div>
         </section>
       )}
 
       {/* ====== TESTIMONIALS ====== */}
-      <section className="py-20 bg-gradient-brand relative overflow-hidden">
-        {/* Decorative */}
-        <div className="absolute inset-0 bg-dot-pattern opacity-20" />
-
-        <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-10">
-          <motion.div {...fadeUp} className="text-center mb-10">
-            <span className="inline-block px-3 py-1.5 bg-white/15 text-white text-xs font-semibold rounded-full border border-white/20 mb-4">
-              💬 Khách hàng nói gì
-            </span>
-            <h2 className="text-4xl font-black text-white tracking-tight">
-              Họ tin tưởng chúng tôi
+      <section className="py-24 lg:py-32 bg-brand-900 relative overflow-hidden">
+        {/* Background elements */}
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-brand-800/50 skew-x-12 translate-x-32" />
+        
+        <div className="relative z-10 max-w-4xl mx-auto px-6 md:px-12 text-center">
+          <motion.div {...fadeUp} className="mb-16">
+            <span className="section-label !text-brand-300">Khách hàng</span>
+            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight">
+              Sự tin tưởng tuyệt đối
             </h2>
           </motion.div>
 
-          <div className="relative overflow-hidden">
+          <div className="relative min-h-[250px]">
             <AnimatePresence mode="wait">
               <motion.div
                 key={testimonialIdx}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.4 }}
-                className="card-glass rounded-3xl p-8 text-center"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                className="absolute inset-0 flex flex-col items-center justify-center will-change-transform"
               >
-                <div className="text-5xl mb-4">{testimonials[testimonialIdx].avatar}</div>
-                <div className="flex justify-center gap-1 mb-4">
+                <div className="flex gap-1 mb-6">
                   {[...Array(testimonials[testimonialIdx].rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+                    <Star key={i} className="w-5 h-5 fill-gold-400 text-gold-400" />
                   ))}
                 </div>
-                <blockquote className="text-slate-700 text-lg leading-relaxed mb-5 font-medium italic">
+                <blockquote className="text-xl md:text-2xl lg:text-3xl font-medium text-white leading-relaxed mb-8 max-w-3xl">
                   "{testimonials[testimonialIdx].text}"
                 </blockquote>
-                <p className="font-bold text-slate-900">{testimonials[testimonialIdx].name}</p>
-                <p className="text-sm text-teal-600">Chủ nhân của {testimonials[testimonialIdx].pet}</p>
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center text-2xl border border-white/20 shadow-xl">
+                    {testimonials[testimonialIdx].avatar}
+                  </div>
+                  <div className="text-left">
+                    <p className="font-bold text-white">{testimonials[testimonialIdx].name}</p>
+                    <p className="text-sm text-brand-200">Chủ nhân của {testimonials[testimonialIdx].pet}</p>
+                  </div>
+                </div>
               </motion.div>
             </AnimatePresence>
-          </div>
-
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-6">
-            {testimonials.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setTestimonialIdx(i)}
-                className={`rounded-full transition-all duration-300 ${i === testimonialIdx ? 'w-6 h-2 bg-white' : 'w-2 h-2 bg-white/40'}`}
-              />
-            ))}
           </div>
         </div>
       </section>
 
       {/* ====== CTA ====== */}
-      <section className="py-20 bg-white">
-        <div className="max-w-3xl mx-auto px-6 text-center">
+      <section className="py-24 lg:py-32 bg-white dark:bg-[#0a0c0f]">
+        <div className="max-w-4xl mx-auto px-6 text-center">
           <motion.div {...fadeUp}>
-            <div className="w-20 h-20 bg-teal-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-teal">
-              <PawPrint className="w-10 h-10 text-teal-600" />
+            <div className="w-20 h-20 bg-brand-50 dark:bg-brand-900/30 rounded-3xl flex items-center justify-center mx-auto mb-8 rotate-3 shadow-glow-brand">
+              <PawPrint className="w-10 h-10 text-brand-600 dark:text-brand-400" />
             </div>
-            <h2 className="text-4xl font-black text-slate-900 tracking-tight mb-4">
-              Thú cưng của bạn<br />
-              xứng đáng được <span className="text-gradient-teal">chăm sóc tốt nhất</span>
+            <h2 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white tracking-tight mb-6">
+              Đồng hành cùng<br />
+              <span className="text-brand-600 dark:text-brand-400">sức khoẻ thú cưng</span>
             </h2>
-            <p className="text-slate-500 text-lg mb-8">
-              Đặt lịch khám ngay hôm nay. Đội ngũ bác sĩ của chúng tôi luôn sẵn sàng phục vụ.
+            <p className="text-slate-500 dark:text-slate-400 text-lg md:text-xl mb-12 max-w-2xl mx-auto font-light">
+              Đặt lịch khám ngay hôm nay để nhận được sự chăm sóc tận tâm nhất từ đội ngũ chuyên gia của chúng tôi.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/booking" className="btn-primary py-4 px-10 text-base shine">
+              <Link to="/booking" className="btn-primary py-4 px-10 text-lg shadow-glow-brand">
                 <CalendarCheck className="w-5 h-5" />
-                Đặt lịch ngay
+                Đặt lịch khám ngay
               </Link>
-              <a
-                href="https://maps.google.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn-secondary py-4 px-10 text-base"
-              >
+              <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" className="btn-secondary py-4 px-10 text-lg">
                 <MapPin className="w-5 h-5" />
-                Xem bản đồ
+                Tìm phòng khám
               </a>
             </div>
           </motion.div>

@@ -22,6 +22,7 @@ export default function AdminAppointments() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [speciesFilter, setSpeciesFilter] = useState('all');
   const [serviceFilter, setServiceFilter] = useState('all');
+  const [sortOrder, setSortOrder] = useState('newest');
   const [loading, setLoading] = useState(true);
   const [staffs, setStaffs] = useState([]);
   const [users, setUsers] = useState([]);
@@ -88,8 +89,15 @@ export default function AdminAppointments() {
         (a._id || '').toLowerCase().includes(q)
       );
     }
+    
+    result.sort((a, b) => {
+      const dateA = new Date(a.createdAt || a.date);
+      const dateB = new Date(b.createdAt || b.date);
+      return sortOrder === 'newest' ? dateB - dateA : dateA - dateB;
+    });
+
     setFiltered(result);
-  }, [search, statusFilter, speciesFilter, serviceFilter, appointments]);
+  }, [search, statusFilter, speciesFilter, serviceFilter, sortOrder, appointments]);
 
   const openApprovalModal = (apt) => {
     setSelectedApt(apt);
@@ -249,7 +257,7 @@ export default function AdminAppointments() {
 
     if (apt.paymentStatus === 'Paid') {
       return (
-        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-teal-700 bg-teal-50 px-2 py-0.5 rounded-full border border-teal-200">
+        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-brand-700 bg-brand-50 px-2 py-0.5 rounded-full border border-brand-200">
           <CheckCircle className="w-3 h-3" /> Đã TT {apt.paymentMethod && `(${apt.paymentMethod})`}
         </span>
       );
@@ -281,7 +289,7 @@ export default function AdminAppointments() {
           
           {/* Search & Actions */}
           <div className="mt-6 flex flex-col sm:flex-row items-center gap-3">
-            <div className="flex-1 flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-3 ring-1 ring-slate-200 dark:ring-white/5 focus-within:ring-teal-500 transition-all w-full">
+            <div className="flex-1 flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-3 ring-1 ring-slate-200 dark:ring-white/5 focus-within:ring-brand-500 transition-all w-full">
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
                 type="text" value={search} onChange={e => setSearch(e.target.value)}
@@ -291,7 +299,7 @@ export default function AdminAppointments() {
             </div>
             <button 
               onClick={() => setIsCreateModalOpen(true)}
-              className="w-full sm:w-auto px-6 py-3 bg-teal-600 hover:bg-teal-700 text-white font-bold rounded-2xl shadow-lg shadow-teal-500/20 transition-all shrink-0 active:scale-95"
+              className="w-full sm:w-auto px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold rounded-2xl shadow-lg shadow-brand-500/20 transition-all shrink-0 active:scale-95"
             >
               + Tạo lịch hẹn
             </button>
@@ -304,7 +312,7 @@ export default function AdminAppointments() {
             { label: 'Tổng', count: counts.all, color: 'text-slate-700 dark:text-slate-300', bg: 'bg-slate-50 dark:bg-slate-800' },
             { label: 'Chờ duyệt', count: counts.pending, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-500/10' },
             { label: 'Đã xác nhận', count: counts.confirmed, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-500/10' },
-            { label: 'Hoàn thành', count: counts.completed, color: 'text-teal-600 dark:text-teal-400', bg: 'bg-teal-50 dark:bg-teal-500/10' },
+            { label: 'Hoàn thành', count: counts.completed, color: 'text-brand-600 dark:text-brand-400', bg: 'bg-brand-50 dark:bg-brand-500/10' },
           ].map(s => (
             <div key={s.label} className={`${s.bg} rounded-3xl p-5 ring-1 ring-slate-200/50 dark:ring-white/5 shadow-sm flex flex-col justify-center`}>
               <p className={`text-3xl font-black ${s.color}`}>{s.count}</p>
@@ -322,7 +330,7 @@ export default function AdminAppointments() {
         <div className="flex flex-wrap gap-2 w-full sm:w-auto">
           <select
             value={speciesFilter} onChange={e => setSpeciesFilter(e.target.value)}
-            className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-300 outline-none focus:ring-teal-500 transition cursor-pointer flex-1 sm:flex-none"
+            className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-300 outline-none focus:ring-brand-500 transition cursor-pointer flex-1 sm:flex-none"
           >
             <option value="all">Tất cả Loài</option>
             <option value="Chó">Chó</option>
@@ -331,16 +339,23 @@ export default function AdminAppointments() {
           </select>
           <select
             value={serviceFilter} onChange={e => setServiceFilter(e.target.value)}
-            className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-300 outline-none focus:ring-teal-500 transition cursor-pointer flex-1 sm:flex-none"
+            className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-300 outline-none focus:ring-brand-500 transition cursor-pointer flex-1 sm:flex-none"
           >
             <option value="all">Tất cả Dịch vụ</option>
             {uniqueServices.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
           <select
             value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
-            className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-300 outline-none focus:ring-teal-500 transition cursor-pointer flex-1 sm:flex-none"
+            className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-300 outline-none focus:ring-brand-500 transition cursor-pointer flex-1 sm:flex-none"
           >
             {STATUS_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+          </select>
+          <select
+            value={sortOrder} onChange={e => setSortOrder(e.target.value)}
+            className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-300 outline-none focus:ring-brand-500 transition cursor-pointer flex-1 sm:flex-none"
+          >
+            <option value="newest">Mới nhất</option>
+            <option value="oldest">Cũ nhất</option>
           </select>
         </div>
       </div>
@@ -368,7 +383,7 @@ export default function AdminAppointments() {
                 {filtered.map(apt => (
                   <tr key={apt._id} onClick={() => openApprovalModal(apt)} className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                     <td className="py-4 px-6 align-top">
-                      <p className="font-bold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">{apt.userId?.fullName || 'Khách vãng lai'}</p>
+                      <p className="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{apt.userId?.fullName || 'Khách vãng lai'}</p>
                       <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">{apt.userId?.phone}</p>
                     </td>
                     <td className="py-4 px-6 align-top">
@@ -378,10 +393,10 @@ export default function AdminAppointments() {
                       <div className="mt-2 space-y-1">
                         {(apt.services || []).map((s, i) => (
                           <p key={i} className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center gap-1">
-                            <span className="text-teal-600 dark:text-teal-400 font-bold">{s.name}</span> — {formatCurrency(s.price)}
+                            <span className="text-brand-600 dark:text-brand-400 font-bold">{s.name}</span> — {formatCurrency(s.price)}
                           </p>
                         )) || (
-                          <p className="text-xs font-bold text-teal-600 dark:text-teal-400">{apt.services?.map(s => s.name).join(', ') || apt.service}</p>
+                          <p className="text-xs font-bold text-brand-600 dark:text-brand-400">{apt.services?.map(s => s.name).join(', ') || apt.service}</p>
                         )}
                       </div>
                       
@@ -403,7 +418,7 @@ export default function AdminAppointments() {
 
                       {/* Assigned Vet */}
                       {apt.billingDetails?.vetName && (
-                        <p className="text-[11px] text-teal-600 dark:text-teal-400 font-bold mt-2 flex items-center gap-1">
+                        <p className="text-[11px] text-brand-600 dark:text-brand-400 font-bold mt-2 flex items-center gap-1">
                           👨‍⚕️ BS: {apt.billingDetails.vetName}
                         </p>
                       )}
@@ -413,7 +428,7 @@ export default function AdminAppointments() {
                       <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">{apt.timeSlot}</p>
                     </td>
                     <td className="py-4 px-6 align-top">
-                      <span className="inline-flex items-center justify-center px-3 py-1.5 rounded-xl text-[13px] font-black bg-teal-50 text-teal-700 dark:bg-teal-500/10 dark:text-teal-400 ring-1 ring-teal-200 dark:ring-teal-500/30 whitespace-nowrap shadow-sm">
+                      <span className="inline-flex items-center justify-center px-3 py-1.5 rounded-xl text-[13px] font-black bg-brand-50 text-brand-700 dark:bg-brand-500/10 dark:text-brand-400 ring-1 ring-brand-200 dark:ring-brand-500/30 whitespace-nowrap shadow-sm">
                         {formatCurrency(apt.totalPrice || apt.billingDetails?.price || apt.estimatedPrice || 0)}
                       </span>
                     </td>
@@ -428,14 +443,14 @@ export default function AdminAppointments() {
                           <div className="flex gap-1">
                             <button
                               onClick={e => { e.stopPropagation(); handleConfirmQRPayment(apt._id); }}
-                              className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-500/10 hover:bg-teal-100 dark:hover:bg-teal-500/20 rounded-xl transition-all"
+                              className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/10 hover:bg-brand-100 dark:hover:bg-brand-500/20 rounded-xl transition-all"
                               title="Xác nhận đã nhận tiền QR/Chuyển khoản"
                             >
                               <QrCode className="w-3.5 h-3.5" /> QR
                             </button>
                             <button
                               onClick={e => { e.stopPropagation(); handleConfirmCash(apt._id); }}
-                              className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 hover:bg-emerald-100 dark:hover:bg-emerald-500/20 rounded-xl transition-all"
+                              className="flex items-center gap-1 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/10 hover:bg-brand-100 dark:hover:bg-brand-500/20 rounded-xl transition-all"
                               title="Xác nhận đã thu tiền mặt"
                             >
                               <Banknote className="w-3.5 h-3.5" /> TM
@@ -508,13 +523,13 @@ export default function AdminAppointments() {
               <form onSubmit={handleApprove} className="flex-1 overflow-y-auto custom-scrollbar">
                 <div className="p-6 space-y-6">
                   {/* Summary */}
-                  <div className="bg-teal-50 dark:bg-teal-500/10 ring-1 ring-teal-200 dark:ring-teal-500/30 p-5 rounded-3xl flex justify-between items-start">
+                  <div className="bg-brand-50 dark:bg-brand-500/10 ring-1 ring-brand-200 dark:ring-brand-500/30 p-5 rounded-3xl flex justify-between items-start">
                     <div>
-                      <p className="font-black text-lg text-teal-900 dark:text-teal-400">
+                      <p className="font-black text-lg text-brand-900 dark:text-brand-400">
                         {selectedApt.userId?.fullName} — {selectedApt.petId?.name}
                       </p>
-                      <p className="text-sm font-medium text-teal-700 dark:text-teal-300 mt-1">Dịch vụ: {(selectedApt.services || []).map(s => s.name).join(', ') || selectedApt.service} · {selectedApt.reason}</p>
-                      <p className="text-[10px] font-mono font-bold text-teal-600 dark:text-teal-500 mt-2 bg-white/50 dark:bg-black/20 inline-block px-2 py-1 rounded-lg">
+                      <p className="text-sm font-medium text-brand-700 dark:text-brand-300 mt-1">Dịch vụ: {(selectedApt.services || []).map(s => s.name).join(', ') || selectedApt.service} · {selectedApt.reason}</p>
+                      <p className="text-[10px] font-mono font-bold text-brand-600 dark:text-brand-500 mt-2 bg-white/50 dark:bg-black/20 inline-block px-2 py-1 rounded-lg">
                         ID: {selectedApt._id}
                       </p>
                       {selectedApt.serviceLocation === 'home' && (
@@ -524,15 +539,15 @@ export default function AdminAppointments() {
                       )}
                     </div>
                     <div className="text-right shrink-0 bg-white/50 dark:bg-black/20 p-3 rounded-2xl">
-                      <p className="text-sm font-black text-teal-900 dark:text-teal-400">{selectedApt.date}</p>
-                      <p className="text-xs font-bold text-teal-700 dark:text-teal-300 uppercase tracking-wider">{selectedApt.timeSlot}</p>
+                      <p className="text-sm font-black text-brand-900 dark:text-brand-400">{selectedApt.date}</p>
+                      <p className="text-xs font-bold text-brand-700 dark:text-brand-300 uppercase tracking-wider">{selectedApt.timeSlot}</p>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-5">
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Trạng thái</label>
-                      <select value={status} onChange={e => setStatus(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all">
+                      <select value={status} onChange={e => setStatus(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all">
                         <option value="pending">⏳ Chờ duyệt</option>
                         <option value="confirmed">✅ Xác nhận lịch</option>
                         <option value="completed">🏁 Đã hoàn thành</option>
@@ -550,7 +565,7 @@ export default function AdminAppointments() {
                       <>
                         <div>
                           <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Giá dịch vụ (VNĐ)</label>
-                          <input type="number" min="0" value={price} onChange={e => setPrice(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all" />
+                          <input type="number" min="0" value={price} onChange={e => setPrice(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all" />
                         </div>
                         {selectedApt.serviceLocation === 'home' && (
                           <div>
@@ -575,7 +590,7 @@ export default function AdminAppointments() {
                                 setVetPhone('');
                               }
                             }} 
-                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                            className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
                           >
                             <option value="">-- Chọn nhân sự --</option>
                             {staffs.filter(s => s.role !== 'Admin').map(s => (
@@ -585,15 +600,15 @@ export default function AdminAppointments() {
                         </div>
                         <div>
                           <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">SĐT Hotline *</label>
-                          <input type="text" required value={vetPhone} onChange={e => setVetPhone(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all" placeholder="Ví dụ: 0901234567" />
+                          <input type="text" required value={vetPhone} onChange={e => setVetPhone(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all" placeholder="Ví dụ: 0901234567" />
                         </div>
                         <div className="col-span-2">
                           <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Địa chỉ phòng khám *</label>
-                          <input type="text" required value={clinicAddress} onChange={e => setClinicAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all" />
+                          <input type="text" required value={clinicAddress} onChange={e => setClinicAddress(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all" />
                         </div>
                         <div className="col-span-2">
                           <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Ghi chú & Dặn dò</label>
-                          <textarea rows="3" value={clinicNote} onChange={e => setClinicNote(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all resize-none" />
+                          <textarea rows="3" value={clinicNote} onChange={e => setClinicNote(e.target.value)} className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all resize-none" />
                         </div>
                       </>
                     )}
@@ -605,7 +620,7 @@ export default function AdminAppointments() {
                     {status !== 'cancelled' ? (
                       <>
                         <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Tổng hóa đơn</span>
-                        <span className="text-2xl font-black text-teal-600 dark:text-teal-400">{formatCurrency(Number(price) + Number(travelFee))}</span>
+                        <span className="text-2xl font-black text-brand-600 dark:text-brand-400">{formatCurrency(Number(price) + Number(travelFee))}</span>
                         {selectedApt.services && selectedApt.services.length > 1 && (
                           <span className="text-[10px] font-medium text-slate-400 mt-1">
                             Dịch vụ: {formatCurrency(selectedApt.services.reduce((a,b) => a + (b.price||0), 0))}
@@ -621,7 +636,7 @@ export default function AdminAppointments() {
                     <button type="button" onClick={() => setIsModalOpen(false)} className="flex-1 sm:flex-none py-3 px-6 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors active:scale-95">
                       Hủy
                     </button>
-                    <button type="submit" disabled={saving} className="flex-1 sm:flex-none py-3 px-6 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-lg shadow-teal-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
+                    <button type="submit" disabled={saving} className="flex-1 sm:flex-none py-3 px-6 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
                       {saving ? 'Đang lưu...' : 'Lưu & Gửi Phiếu'}
                     </button>
                   </div>
@@ -665,7 +680,7 @@ export default function AdminAppointments() {
                       required
                       value={createData.userId}
                       onChange={e => setCreateData({ ...createData, userId: e.target.value, petId: '' })}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
                     >
                       <option value="">-- Chọn khách hàng --</option>
                       {users.map(u => (
@@ -681,7 +696,7 @@ export default function AdminAppointments() {
                       value={createData.petId}
                       onChange={e => setCreateData({ ...createData, petId: e.target.value })}
                       disabled={!createData.userId}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all disabled:opacity-50"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all disabled:opacity-50"
                     >
                       <option value="">-- Chọn thú cưng --</option>
                       {allPets.filter(p => p.ownerId?._id === createData.userId || p.ownerId === createData.userId).map(p => (
@@ -695,7 +710,7 @@ export default function AdminAppointments() {
                     <select
                       value={createData.vetId}
                       onChange={e => setCreateData({ ...createData, vetId: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
                     >
                       <option value="">-- Chọn nhân sự --</option>
                       {staffs.filter(s => s.role !== 'Admin').map(s => (
@@ -712,7 +727,7 @@ export default function AdminAppointments() {
                         .map(s => {
                         const isSelected = createData.services.some(x => x.name === s.name);
                         return (
-                          <label key={s._id} className={`flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer ${isSelected ? 'bg-teal-50 border-teal-200 dark:bg-teal-500/10 dark:border-teal-500/30' : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-white/5 hover:border-teal-300'}`}>
+                          <label key={s._id} className={`flex items-center gap-3 p-3 rounded-lg border transition-all cursor-pointer ${isSelected ? 'bg-brand-50 border-brand-200 dark:bg-brand-500/10 dark:border-brand-500/30' : 'bg-white border-slate-200 dark:bg-slate-900 dark:border-white/5 hover:border-brand-300'}`}>
                             <input
                               type="checkbox"
                               checked={isSelected}
@@ -722,11 +737,11 @@ export default function AdminAppointments() {
                                 else newServices = newServices.filter(x => x.name !== s.name);
                                 setCreateData({ ...createData, services: newServices });
                               }}
-                              className="w-4 h-4 text-teal-600 rounded"
+                              className="w-4 h-4 text-brand-600 rounded"
                             />
                             <div className="flex-1 min-w-0">
                               <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{s.name}</p>
-                              <p className="text-xs text-teal-600 dark:text-teal-400 font-medium">{formatCurrency(s.basePrice)}</p>
+                              <p className="text-xs text-brand-600 dark:text-brand-400 font-medium">{formatCurrency(s.basePrice)}</p>
                             </div>
                           </label>
                         );
@@ -741,7 +756,7 @@ export default function AdminAppointments() {
                       min={new Date().toISOString().split('T')[0]}
                       value={createData.date}
                       onChange={e => setCreateData({ ...createData, date: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
                     />
                   </div>
 
@@ -751,7 +766,7 @@ export default function AdminAppointments() {
                       required
                       value={createData.timeSlot}
                       onChange={e => setCreateData({ ...createData, timeSlot: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
                     >
                       <option value="">-- Chọn giờ --</option>
                       {['08:00 - 09:00', '09:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '13:00 - 14:00', '14:00 - 15:00', '15:00 - 16:00', '16:00 - 17:00'].map(t => (
@@ -770,7 +785,7 @@ export default function AdminAppointments() {
                             return fullService && fullService.clinicServiceAvailable;
                           });
                           setCreateData({ ...createData, serviceLocation: 'clinic', homeAddress: '', services: validServices });
-                        }} className="text-teal-500 focus:ring-teal-500" />
+                        }} className="text-brand-500 focus:ring-brand-500" />
                         Tại phòng khám
                       </label>
                       <label className="flex items-center gap-2 text-sm font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
@@ -781,7 +796,7 @@ export default function AdminAppointments() {
                             return fullService && fullService.homeServiceAvailable;
                           });
                           setCreateData({ ...createData, serviceLocation: 'home', services: validServices });
-                        }} className="text-teal-500 focus:ring-teal-500" />
+                        }} className="text-brand-500 focus:ring-brand-500" />
                         Khám tại nhà
                       </label>
                     </div>
@@ -792,7 +807,7 @@ export default function AdminAppointments() {
                     <select
                       value={createData.adminPaymentOverride}
                       onChange={e => setCreateData({ ...createData, adminPaymentOverride: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all"
                     >
                       <option value="Pending">Chờ khách tự thanh toán (Mặc định)</option>
                       <option value="Cash">Đã thu Tiền mặt (Lịch tự động xác nhận)</option>
@@ -819,7 +834,7 @@ export default function AdminAppointments() {
                       required rows="2"
                       value={createData.reason}
                       onChange={e => setCreateData({ ...createData, reason: e.target.value })}
-                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all resize-none"
+                      className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all resize-none"
                     />
                   </div>
                 </div>
@@ -828,7 +843,7 @@ export default function AdminAppointments() {
                   <button type="button" onClick={() => setIsCreateModalOpen(false)} className="py-3 px-6 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors active:scale-95">
                     Hủy
                   </button>
-                  <button type="submit" disabled={creating} className="py-3 px-6 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-lg shadow-teal-500/20 transition-all active:scale-95 disabled:opacity-70">
+                  <button type="submit" disabled={creating} className="py-3 px-6 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-70">
                     {creating ? 'Đang tạo...' : 'Xác nhận tạo'}
                   </button>
                 </div>

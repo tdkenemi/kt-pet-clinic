@@ -84,9 +84,9 @@ export default function AdminBlogs() {
       <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl ring-1 ring-slate-200 dark:ring-white/10 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Quản lý Blog</h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Tất cả bài viết từ cộng đồng — <span className="font-bold text-teal-600 dark:text-teal-400">{blogs.length}</span> bài</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Tất cả bài viết từ cộng đồng — <span className="font-bold text-brand-600 dark:text-brand-400">{blogs.length}</span> bài</p>
         </div>
-        <button onClick={openNew} className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 transition-colors shadow-lg shadow-teal-500/30 active:scale-95">
+        <button onClick={openNew} className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-lg shadow-brand-500/30 active:scale-95">
           <Plus className="w-5 h-5" /> Thêm bài viết
         </button>
       </div>
@@ -113,7 +113,7 @@ export default function AdminBlogs() {
                   <input
                     required type="text" value={formData.title}
                     onChange={e => setFormData({ ...formData, title: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-teal-500 transition-all placeholder:text-slate-400 font-medium"
+                    className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-bold text-slate-900 dark:text-white outline-none focus:ring-brand-500 transition-all placeholder:text-slate-400 font-medium"
                     placeholder="Tiêu đề bài viết..."
                   />
                 </div>
@@ -124,7 +124,7 @@ export default function AdminBlogs() {
                   <input
                     type="text" value={formData.image}
                     onChange={e => setFormData({ ...formData, image: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:ring-teal-500 transition-all placeholder:text-slate-400"
+                    className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:ring-brand-500 transition-all placeholder:text-slate-400"
                     placeholder="https://example.com/image.jpg"
                   />
                   {formData.image && (
@@ -136,14 +136,14 @@ export default function AdminBlogs() {
                   <textarea
                     required rows="8" value={formData.content}
                     onChange={e => setFormData({ ...formData, content: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:ring-teal-500 transition-all placeholder:text-slate-400 resize-none custom-scrollbar"
+                    className="w-full bg-slate-50 dark:bg-slate-950/50 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white outline-none focus:ring-brand-500 transition-all placeholder:text-slate-400 resize-none custom-scrollbar"
                     placeholder="Nội dung bài viết..."
                   />
                   <p className="text-[10px] font-bold text-slate-400 mt-2 text-right">{formData.content.length} ký tự</p>
                 </div>
                 <div className="flex gap-4 pt-4 border-t border-slate-100 dark:border-white/5">
                   <button type="button" onClick={() => setShowForm(false)} className="flex-1 px-6 py-3 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors active:scale-95">Hủy</button>
-                  <button type="submit" disabled={saving} className="flex-1 px-6 py-3 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 transition-colors shadow-lg shadow-teal-500/30 active:scale-95 disabled:opacity-50 disabled:pointer-events-none">
+                  <button type="submit" disabled={saving} className="flex-1 px-6 py-3 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 transition-colors shadow-lg shadow-brand-500/30 active:scale-95 disabled:opacity-50 disabled:pointer-events-none">
                     {saving ? 'Đang lưu...' : (editingId ? 'Cập nhật' : 'Đăng bài')}
                   </button>
                 </div>
@@ -154,7 +154,7 @@ export default function AdminBlogs() {
       </AnimatePresence>
 
       {/* Search */}
-      <div className="bg-white dark:bg-slate-900 rounded-2xl ring-1 ring-slate-200 dark:ring-white/10 shadow-sm p-2 flex items-center gap-3 focus-within:ring-teal-500 transition-all">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl ring-1 ring-slate-200 dark:ring-white/10 shadow-sm p-2 flex items-center gap-3 focus-within:ring-brand-500 transition-all">
         <div className="pl-4">
           <Search className="w-5 h-5 text-slate-400 shrink-0" />
         </div>
@@ -202,14 +202,14 @@ export default function AdminBlogs() {
                           />
                         </div>
                         <div className="min-w-0 max-w-[250px]">
-                          <p className="font-bold text-slate-900 dark:text-white truncate group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">{blog.title}</p>
+                          <p className="font-bold text-slate-900 dark:text-white truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{blog.title}</p>
                           <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 mt-1 line-clamp-1">{blog.content?.substring(0, 60)}...</p>
                         </div>
                       </div>
                     </td>
                     <td className="py-4 px-6 align-middle">
                       <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-inner">
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white text-xs font-bold shrink-0 shadow-inner">
                           {(blog.authorId?.fullName || blog.author || 'A').charAt(0).toUpperCase()}
                         </div>
                         <div>

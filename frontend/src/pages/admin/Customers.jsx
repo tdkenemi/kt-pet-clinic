@@ -118,7 +118,7 @@ export default function Customers() {
           
           {/* Search & Filter */}
           <div className="flex flex-col sm:flex-row gap-3 mt-6">
-            <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-2.5 ring-1 ring-slate-200 dark:ring-white/10 focus-within:ring-teal-500 transition-all flex-1">
+            <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-2.5 ring-1 ring-slate-200 dark:ring-white/10 focus-within:ring-brand-500 transition-all flex-1">
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
                 type="text" placeholder="Tìm theo tên, email, SĐT..."
@@ -128,7 +128,7 @@ export default function Customers() {
             </div>
             <select
               value={roleFilter} onChange={e => setRoleFilter(e.target.value)}
-              className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-2xl px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 outline-none focus:ring-teal-500 transition cursor-pointer"
+              className="bg-slate-50 dark:bg-slate-950 border-0 ring-1 ring-slate-200 dark:ring-white/10 rounded-2xl px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 outline-none focus:ring-brand-500 transition cursor-pointer"
             >
               <option value="all">Tất cả vai trò</option>
               <option value="customer">Khách hàng</option>
@@ -141,7 +141,7 @@ export default function Customers() {
         {/* Stats (Span 2 split) */}
         <div className="lg:col-span-4 xl:col-span-2 grid grid-cols-3 gap-4">
           {[
-            { label: 'Khách hàng', count: users.filter(u => u.role === 'customer').length, color: 'text-teal-600 dark:text-teal-400', bg: 'bg-teal-50 dark:bg-teal-500/10' },
+            { label: 'Khách hàng', count: users.filter(u => u.role === 'customer').length, color: 'text-brand-600 dark:text-brand-400', bg: 'bg-brand-50 dark:bg-brand-500/10' },
             { label: 'Bác sĩ thú y', count: users.filter(u => u.role === 'veterinarian').length, color: 'text-indigo-600 dark:text-indigo-400', bg: 'bg-indigo-50 dark:bg-indigo-500/10' },
             { label: 'Quản trị viên', count: users.filter(u => u.role === 'admin').length, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-500/10' },
           ].map(s => (
@@ -177,11 +177,11 @@ export default function Customers() {
                   <tr key={c._id} onClick={() => openDetails(c)} className="cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-black text-sm shrink-0 shadow-sm group-hover:scale-105 transition-transform">
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white font-black text-sm shrink-0 shadow-sm group-hover:scale-105 transition-transform">
                           {c.fullName?.charAt(0)?.toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-bold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">{c.fullName}</p>
+                          <p className="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{c.fullName}</p>
                           <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{c.email}</p>
                         </div>
                       </div>
@@ -201,7 +201,7 @@ export default function Customers() {
                       </span>
                     </td>
                     <td className="py-4 px-6 text-right space-x-2">
-                      <button onClick={e => { e.stopPropagation(); openDetails(c); }} className="p-2 text-slate-400 hover:text-teal-600 hover:bg-teal-50 dark:hover:bg-teal-500/10 rounded-xl transition-all">
+                      <button onClick={e => { e.stopPropagation(); openDetails(c); }} className="p-2 text-slate-400 hover:text-brand-600 hover:bg-brand-50 dark:hover:bg-brand-500/10 rounded-xl transition-all">
                         <Eye className="w-4 h-4" />
                       </button>
                       {c.role !== 'admin' && (
@@ -242,7 +242,7 @@ export default function Customers() {
               {/* Header */}
               <div className="flex justify-between items-center p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/50">
                 <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center text-white font-black text-2xl shadow-sm">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600 flex items-center justify-center text-white font-black text-2xl shadow-sm">
                     {selectedUser.fullName?.charAt(0)?.toUpperCase()}
                   </div>
                   <div>
@@ -254,11 +254,11 @@ export default function Customers() {
                 </div>
                 <div className="flex items-center gap-2">
                   {!isEditMode ? (
-                    <button onClick={() => setIsEditMode(true)} className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-500/10 rounded-xl hover:bg-teal-100 dark:hover:bg-teal-500/20 transition-colors active:scale-95">
+                    <button onClick={() => setIsEditMode(true)} className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/10 rounded-xl hover:bg-brand-100 dark:hover:bg-brand-500/20 transition-colors active:scale-95">
                       <Edit2 className="w-4 h-4" /> Sửa
                     </button>
                   ) : (
-                    <button onClick={handleUpdate} disabled={saving} className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-teal-600 rounded-xl hover:bg-teal-700 shadow-lg shadow-teal-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
+                    <button onClick={handleUpdate} disabled={saving} className="flex items-center gap-2 px-4 py-2 text-sm font-bold text-white bg-brand-600 rounded-xl hover:bg-brand-700 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-70 disabled:active:scale-100">
                       <Save className="w-4 h-4" /> {saving ? 'Đang lưu...' : 'Lưu'}
                     </button>
                   )}
@@ -279,15 +279,15 @@ export default function Customers() {
                   <div className="grid grid-cols-2 gap-5 bg-slate-50 dark:bg-slate-900/50 p-5 rounded-3xl ring-1 ring-slate-200 dark:ring-white/5">
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Họ và tên</label>
-                      <input value={editForm.fullName} onChange={e => setEditForm({ ...editForm, fullName: e.target.value })} className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" />
+                      <input value={editForm.fullName} onChange={e => setEditForm({ ...editForm, fullName: e.target.value })} className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" />
                     </div>
                     <div>
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Số điện thoại</label>
-                      <input value={editForm.phone} onChange={e => setEditForm({ ...editForm, phone: e.target.value })} className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all" placeholder="Chưa có SĐT" />
+                      <input value={editForm.phone} onChange={e => setEditForm({ ...editForm, phone: e.target.value })} className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all" placeholder="Chưa có SĐT" />
                     </div>
                     <div className="col-span-2">
                       <label className="block text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Vai trò</label>
-                      <select value={editForm.role} onChange={e => setEditForm({ ...editForm, role: e.target.value })} className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 focus:border-teal-500 outline-none transition-all">
+                      <select value={editForm.role} onChange={e => setEditForm({ ...editForm, role: e.target.value })} className="w-full bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl px-4 py-3 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 outline-none transition-all">
                         <option value="customer">Khách hàng</option>
                         <option value="veterinarian">Bác sĩ thú y</option>
                         <option value="admin">Quản trị viên</option>
@@ -318,8 +318,8 @@ export default function Customers() {
                   {/* Thú cưng */}
                   <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-3xl ring-1 ring-slate-200 dark:ring-white/5">
                     <h4 className="font-extrabold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                        <PawPrint className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                      <div className="w-8 h-8 rounded-xl bg-brand-500/10 flex items-center justify-center">
+                        <PawPrint className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                       </div>
                       Thú cưng ({pets.length})
                     </h4>
@@ -345,8 +345,8 @@ export default function Customers() {
                   {/* Lịch sử lịch hẹn */}
                   <div className="bg-slate-50 dark:bg-slate-900/50 p-5 rounded-3xl ring-1 ring-slate-200 dark:ring-white/5">
                     <h4 className="font-extrabold text-slate-900 dark:text-white mb-4 flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-xl bg-teal-500/10 flex items-center justify-center">
-                        <CalendarCheck className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                      <div className="w-8 h-8 rounded-xl bg-brand-500/10 flex items-center justify-center">
+                        <CalendarCheck className="w-4 h-4 text-brand-600 dark:text-brand-400" />
                       </div>
                       Lịch sử hẹn ({appointments.length})
                     </h4>

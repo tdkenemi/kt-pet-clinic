@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Stethoscope, CalendarCheck, BookOpen, PawPrint, User, LogOut, ChevronDown, LayoutDashboard, Sun, Moon } from 'lucide-react';
+import { Menu, X, Stethoscope, CalendarCheck, BookOpen, PawPrint, User, LogOut, ChevronDown, LayoutDashboard, Sun, Moon, Bell } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useBooking } from '../contexts/BookingContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
+import { io } from 'socket.io-client';
 
 const readUserFromStorage = () => {
   try { return JSON.parse(sessionStorage.getItem('user') || 'null'); }
@@ -24,6 +25,11 @@ export function Topbar() {
   const { theme, toggleTheme } = useTheme();
   const { cart } = useBooking();
   const [servicesList, setServicesList] = useState([]);
+  
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [notifMenuOpen, setNotifMenuOpen] = useState(false);
+  const notifRef = useRef(null);
 
   useEffect(() => {
     axios.get('/api/services')
@@ -45,12 +51,55 @@ export function Topbar() {
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (avatarRef.current && !avatarRef.current.contains(e.target)) setAvatarMenuOpen(false);
+      if (notifRef.current && !notifRef.current.contains(e.target)) setNotifMenuOpen(false);
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => { setMobileMenuOpen(false); setAvatarMenuOpen(false); }, [location.pathname]);
+  useEffect(() => { setMobileMenuOpen(false); setAvatarMenuOpen(false); setNotifMenuOpen(false); }, [location.pathname]);
+
+  const fetchNotifications = useCallback(async () => {
+    if (!user) return;
+    try {
+      const res = await axios.get('/api/notifications', { headers: { Authorization: `Bearer ${user.token}` } });
+      setNotifications(res.data);
+      setUnreadCount(res.data.filter(n => !n.isRead).length);
+    } catch (error) {
+      console.error('Lỗi tải thông báo', error);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    fetchNotifications();
+    if (user) {
+      const socket = io(import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000');
+      socket.emit('join_room', user._id);
+      
+      socket.on('new_notification', (notif) => {
+        setNotifications(prev => [notif, ...prev]);
+        setUnreadCount(prev => prev + 1);
+      });
+
+      return () => socket.disconnect();
+    }
+  }, [user, fetchNotifications]);
+
+  const markAsRead = async (id) => {
+    try {
+      await axios.patch(`/api/notifications/${id}/read`, {}, { headers: { Authorization: `Bearer ${user.token}` } });
+      setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
+      setUnreadCount(prev => Math.max(0, prev - 1));
+    } catch (e) {}
+  };
+
+  const markAllAsRead = async () => {
+    try {
+      await axios.patch('/api/notifications/read-all', {}, { headers: { Authorization: `Bearer ${user.token}` } });
+      setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
+      setUnreadCount(0);
+    } catch (e) {}
+  };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -100,7 +149,7 @@ export function Topbar() {
     <header
       className={`fixed w-full top-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/96 dark:bg-[#15171c]/96 backdrop-blur-xl shadow-sm border-b border-slate-200/60 dark:border-white/5'
+          ? 'bg-white/96 dark:bg-[#15171c]/96 backdrop-blur-md shadow-sm border-b border-slate-200/60 dark:border-white/5'
           : 'bg-white/80 dark:bg-[#15171c]/80 backdrop-blur-md'
       }`}
     >
@@ -109,8 +158,7 @@ export function Topbar() {
         <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
           <motion.div
             whileHover={{ scale: 1.05 }}
-            className="w-9 h-9 rounded-xl flex items-center justify-center shadow-teal"
-            style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}
+            className="w-9 h-9 rounded-xl flex items-center justify-center shadow-glow-brand bg-gradient-brand"
           >
             <Stethoscope className="w-5 h-5 text-white" />
           </motion.div>
@@ -204,8 +252,64 @@ export function Topbar() {
                 </Link>
               )}
 
+              {/* Notifications */}
+              <div className="relative pl-1 pr-3" ref={notifRef}>
+                <button
+                  onClick={() => setNotifMenuOpen(!notifMenuOpen)}
+                  className="relative p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition"
+                >
+                  <Bell className="w-5 h-5" />
+                  {unreadCount > 0 && (
+                    <span className="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-[#15171c]" />
+                  )}
+                </button>
+                
+                <AnimatePresence>
+                  {notifMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.96 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 top-full mt-2 w-80 bg-white dark:bg-[#1e2028] rounded-2xl shadow-xl border border-slate-100 dark:border-white/5 overflow-hidden z-50 flex flex-col max-h-[80vh]"
+                    >
+                      <div className="p-4 border-b border-slate-100 dark:border-white/5 flex justify-between items-center">
+                        <h3 className="font-bold text-slate-900 dark:text-white">Thông báo</h3>
+                        {unreadCount > 0 && (
+                          <button onClick={markAllAsRead} className="text-xs font-medium text-brand-600 dark:text-brand-400 hover:underline">
+                            Đánh dấu đã đọc
+                          </button>
+                        )}
+                      </div>
+                      <div className="overflow-y-auto custom-scrollbar flex-1 p-2 space-y-1">
+                        {notifications.length > 0 ? (
+                          notifications.map(n => (
+                            <div key={n._id} onClick={() => !n.isRead && markAsRead(n._id)} className={`p-3 rounded-xl flex items-start gap-3 cursor-pointer transition-colors ${n.isRead ? 'opacity-70 hover:bg-slate-50 dark:hover:bg-white/5' : 'bg-brand-50 dark:bg-brand-500/10'}`}>
+                              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
+                                n.type === 'success' ? 'bg-green-100 text-green-600' :
+                                n.type === 'error' ? 'bg-red-100 text-red-600' :
+                                n.type === 'warning' ? 'bg-amber-100 text-amber-600' :
+                                'bg-blue-100 text-blue-600'
+                              }`}>
+                                <Bell className="w-4 h-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">{n.title}</p>
+                                <p className="text-xs font-medium text-slate-600 dark:text-slate-400 line-clamp-2 mt-0.5">{n.message}</p>
+                                <p className="text-[10px] text-slate-400 mt-1">{new Date(n.createdAt).toLocaleString('vi-VN')}</p>
+                              </div>
+                              {!n.isRead && <div className="w-2 h-2 bg-brand-500 rounded-full shrink-0 mt-3" />}
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-center text-sm text-slate-400 py-6">Chưa có thông báo nào</p>
+                        )}
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
               {/* Avatar dropdown */}
-              <div className="relative" ref={avatarRef}>
+              <div className="relative border-l border-slate-200 dark:border-white/10 pl-2" ref={avatarRef}>
                 <button
                   onClick={() => setAvatarMenuOpen(!avatarMenuOpen)}
                   className="flex items-center gap-2 p-1 rounded-xl hover:bg-slate-100 transition group"
@@ -214,8 +318,7 @@ export function Topbar() {
                     {user.avatar ? (
                       <img src={user.avatar} alt={user.fullName} className="w-full h-full object-cover" />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-white text-sm font-bold"
-                        style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}>
+                      <div className="w-full h-full flex items-center justify-center text-white text-sm font-bold bg-gradient-brand">
                         {user.fullName?.charAt(0)?.toUpperCase()}
                       </div>
                     )}
@@ -242,8 +345,7 @@ export function Topbar() {
                             {user.avatar ? (
                               <img src={user.avatar} alt={user.fullName} className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-white font-bold text-sm"
-                                style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}>
+                              <div className="w-full h-full flex items-center justify-center text-white font-bold text-sm bg-gradient-brand">
                                 {user.fullName?.charAt(0)?.toUpperCase()}
                               </div>
                             )}
@@ -307,7 +409,7 @@ export function Topbar() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.22 }}
-            className="lg:hidden overflow-hidden border-t border-slate-100 bg-white/98 backdrop-blur-xl"
+            className="lg:hidden overflow-hidden border-t border-slate-100 bg-white/98 backdrop-blur-md"
           >
             <div className="px-4 py-4 space-y-1">
               {navLinks.map(link => (
@@ -363,8 +465,7 @@ export function Topbar() {
                         {user.avatar ? (
                           <img src={user.avatar} alt="" className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-white font-bold"
-                            style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}>
+                          <div className="w-full h-full flex items-center justify-center text-white font-bold bg-gradient-brand">
                             {user.fullName?.charAt(0)?.toUpperCase()}
                           </div>
                         )}
@@ -394,8 +495,7 @@ export function Topbar() {
                   </>
                 ) : (
                   <Link to="/login"
-                    className="flex items-center justify-center px-4 py-3 rounded-xl text-sm font-semibold text-white"
-                    style={{ background: 'linear-gradient(135deg, #0d9488, #0891b2)' }}>
+                    className="flex items-center justify-center px-4 py-3 rounded-xl text-sm font-semibold text-white bg-gradient-brand">
                     Đăng nhập
                   </Link>
                 )}

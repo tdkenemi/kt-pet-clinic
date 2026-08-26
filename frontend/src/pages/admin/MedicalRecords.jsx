@@ -104,7 +104,7 @@ export default function MedicalRecords() {
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Hồ sơ Bệnh án</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 font-medium">Quản lý lịch sử khám chữa bệnh của thú cưng</p>
         </div>
-        <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-3 ring-1 ring-slate-200 dark:ring-white/5 w-full md:w-80 focus-within:ring-teal-500 transition-all">
+        <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 rounded-2xl px-4 py-3 ring-1 ring-slate-200 dark:ring-white/5 w-full md:w-80 focus-within:ring-brand-500 transition-all">
           <Search className="w-4 h-4 text-slate-400 shrink-0" />
           <input
             type="text" 
@@ -163,11 +163,11 @@ export default function MedicalRecords() {
                 {filteredRecords.map(record => (
                   <tr key={record._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors group">
                     <td className="py-4 px-6 align-top">
-                      <p className="font-bold text-slate-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors">{record.appointmentId?.date}</p>
+                      <p className="font-bold text-slate-900 dark:text-white group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{record.appointmentId?.date}</p>
                       <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">{record.appointmentId?.timeSlot}</p>
                     </td>
                     <td className="py-4 px-6 align-top">
-                      <p className="font-bold text-teal-700 dark:text-teal-400">{record.appointmentId?.petId?.name} <span className="font-medium text-slate-500 dark:text-slate-400 ml-1">({record.appointmentId?.petId?.species})</span></p>
+                      <p className="font-bold text-brand-700 dark:text-brand-400">{record.appointmentId?.petId?.name} <span className="font-medium text-slate-500 dark:text-slate-400 ml-1">({record.appointmentId?.petId?.species})</span></p>
                       <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mt-1.5">Khách: {record.appointmentId?.userId?.fullName}</p>
                     </td>
                     <td className="py-4 px-6 align-top">
@@ -212,7 +212,7 @@ export default function MedicalRecords() {
             >
               <div className="p-6 border-b border-slate-100 dark:border-white/5 bg-slate-50/50 dark:bg-slate-950/50 flex justify-between items-center">
                 <h3 className="font-black text-xl tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-                  <FileText className="w-6 h-6 text-teal-600 dark:text-teal-400" /> Tạo Bệnh Án
+                  <FileText className="w-6 h-6 text-brand-600 dark:text-brand-400" /> Tạo Bệnh Án
                 </h3>
                 <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 p-2 rounded-full transition-colors">
                   <X className="w-5 h-5" />
@@ -220,10 +220,10 @@ export default function MedicalRecords() {
               </div>
 
               <form onSubmit={handleCreateRecord} className="p-6 space-y-5 custom-scrollbar overflow-y-auto max-h-[75vh]">
-                <div className="bg-teal-50 dark:bg-teal-500/10 ring-1 ring-teal-200 dark:ring-teal-500/30 p-5 rounded-2xl">
-                  <p className="font-black text-lg text-teal-900 dark:text-teal-400">{selectedApt.petId?.name}</p>
-                  <p className="text-sm font-medium text-teal-700 dark:text-teal-300 mt-1">Dịch vụ: {selectedApt.services?.map(s => s.name).join(', ') || selectedApt.service}</p>
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-teal-600 dark:text-teal-500 mt-2">Ngày: {selectedApt.date}</p>
+                <div className="bg-brand-50 dark:bg-brand-500/10 ring-1 ring-brand-200 dark:ring-brand-500/30 p-5 rounded-2xl">
+                  <p className="font-black text-lg text-brand-900 dark:text-brand-400">{selectedApt.petId?.name}</p>
+                  <p className="text-sm font-medium text-brand-700 dark:text-brand-300 mt-1">Dịch vụ: {selectedApt.services?.map(s => s.name).join(', ') || selectedApt.service}</p>
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-brand-600 dark:text-brand-500 mt-2">Ngày: {selectedApt.date}</p>
                 </div>
 
                 <div>
@@ -233,7 +233,7 @@ export default function MedicalRecords() {
                     rows="3"
                     value={diagnosis}
                     onChange={e => setDiagnosis(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl p-4 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all resize-none"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl p-4 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all resize-none"
                     placeholder="Nhập tình trạng sức khỏe, kết quả khám..."
                   />
                 </div>
@@ -245,7 +245,7 @@ export default function MedicalRecords() {
                     rows="3"
                     value={treatment}
                     onChange={e => setTreatment(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl p-4 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all resize-none"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl p-4 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all resize-none"
                     placeholder="Nhập loại thuốc, phác đồ điều trị..."
                   />
                 </div>
@@ -256,7 +256,7 @@ export default function MedicalRecords() {
                     rows="2"
                     value={notes}
                     onChange={e => setNotes(e.target.value)}
-                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl p-4 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-teal-500 outline-none transition-all resize-none"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-xl p-4 text-sm font-medium text-slate-900 dark:text-white focus:ring-2 focus:ring-brand-500 outline-none transition-all resize-none"
                     placeholder="Dặn dò tái khám..."
                   />
                 </div>
@@ -265,7 +265,7 @@ export default function MedicalRecords() {
                   <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-3 rounded-xl font-bold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors active:scale-95">
                     Hủy
                   </button>
-                  <button type="submit" disabled={saving} className="px-6 py-3 rounded-xl font-bold text-white bg-teal-600 hover:bg-teal-700 shadow-lg shadow-teal-500/20 transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100">
+                  <button type="submit" disabled={saving} className="px-6 py-3 rounded-xl font-bold text-white bg-brand-600 hover:bg-brand-700 shadow-lg shadow-brand-500/20 transition-all active:scale-95 disabled:opacity-50 disabled:active:scale-100">
                     {saving ? 'Đang lưu...' : 'Lưu & Đồng bộ'}
                   </button>
                 </div>
