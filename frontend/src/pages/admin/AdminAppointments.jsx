@@ -4,6 +4,7 @@ import { Trash2, X, CheckCircle, Clock, Search, Filter, XCircle, QrCode, Banknot
 import { useLanguage } from '../../contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAlert } from '../../contexts/AlertContext';
+import PetDetailsModal from '../../components/PetDetailsModal';
 
 const STATUS_OPTIONS = [
   { value: 'all', label: 'Tất cả' },
@@ -17,6 +18,8 @@ export default function AdminAppointments() {
   const [appointments, setAppointments] = useState([]);
   const [filtered, setFiltered] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPetModalOpen, setIsPetModalOpen] = useState(false);
+  const [selectedPetForModal, setSelectedPetForModal] = useState(null);
   const [selectedApt, setSelectedApt] = useState(null);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -387,8 +390,15 @@ export default function AdminAppointments() {
                       <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">{apt.userId?.phone}</p>
                     </td>
                     <td className="py-4 px-6 align-top">
-                      <p className="text-sm font-bold text-slate-900 dark:text-white">
-                        {apt.petId?.name} <span className="font-medium text-slate-500 dark:text-slate-400 ml-1">({apt.petId?.species})</span>
+                      <p 
+                        className="text-sm font-bold text-brand-600 dark:text-brand-400 cursor-pointer hover:underline inline-flex items-center gap-1"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedPetForModal(apt.petId);
+                          setIsPetModalOpen(true);
+                        }}
+                      >
+                        🐾 {apt.petId?.name} <span className="font-medium text-slate-500 dark:text-slate-400">({apt.petId?.species})</span>
                       </p>
                       <div className="mt-2 space-y-1">
                         {(apt.services || []).map((s, i) => (
@@ -525,9 +535,20 @@ export default function AdminAppointments() {
                   {/* Summary */}
                   <div className="bg-brand-50 dark:bg-brand-500/10 ring-1 ring-brand-200 dark:ring-brand-500/30 p-5 rounded-3xl flex justify-between items-start">
                     <div>
-                      <p className="font-black text-lg text-brand-900 dark:text-brand-400">
-                        {selectedApt.userId?.fullName} — {selectedApt.petId?.name}
-                      </p>
+                      <div className="font-black text-lg text-brand-900 dark:text-brand-400 flex items-center gap-2">
+                        {selectedApt.userId?.fullName} — 
+                        <button 
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedPetForModal(selectedApt.petId);
+                            setIsPetModalOpen(true);
+                          }}
+                          className="text-brand-600 dark:text-brand-400 hover:underline flex items-center gap-1"
+                        >
+                          🐾 {selectedApt.petId?.name}
+                        </button>
+                      </div>
                       <p className="text-sm font-medium text-brand-700 dark:text-brand-300 mt-1">Dịch vụ: {(selectedApt.services || []).map(s => s.name).join(', ') || selectedApt.service} · {selectedApt.reason}</p>
                       <p className="text-[10px] font-mono font-bold text-brand-600 dark:text-brand-500 mt-2 bg-white/50 dark:bg-black/20 inline-block px-2 py-1 rounded-lg">
                         ID: {selectedApt._id}
@@ -852,6 +873,12 @@ export default function AdminAppointments() {
           </div>
         )}
       </AnimatePresence>
+      
+      <PetDetailsModal 
+        pet={selectedPetForModal} 
+        isOpen={isPetModalOpen} 
+        onClose={() => setIsPetModalOpen(false)} 
+      />
     </div>
   );
 }

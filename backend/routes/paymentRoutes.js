@@ -33,8 +33,8 @@ router.patch('/:appointmentId/pay', protect, admin, confirmPayment);
 // PATCH /api/payments/:appointmentId/refund — Đánh dấu đã hoàn tiền (Chỉ Admin)
 router.patch('/:appointmentId/refund', protect, admin, processRefund);
 
-// POST /api/payments/mock-webhook — Giả lập webhook (Chỉ Admin / Test)
-router.post('/mock-webhook', protect, admin, mockWebhook);
+// POST /api/payments/mock-webhook — Giả lập webhook (Cho phép User tự test trong Đồ án)
+router.post('/mock-webhook', protect, mockWebhook);
 
 module.exports = router;
 

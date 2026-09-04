@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
 import { MapPin, Phone, Mail, Clock, CheckCircle, Users, Award, Stethoscope, Heart } from 'lucide-react';
+import MapEmbed from '../components/MapEmbed';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 24 },
@@ -212,6 +213,43 @@ export default function AboutUs() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* ====== BẢN ĐỒ ====== */}
+      <section className="py-20 px-6 bg-slate-50">
+        <div className="max-w-5xl mx-auto">
+          <motion.div {...fadeInUp} className="text-center mb-10">
+            <p className="text-brand-600 text-xs font-bold uppercase tracking-[0.2em] mb-3">Vị trí</p>
+            <h2 className="text-4xl font-black text-slate-900 tracking-tight">Tìm chúng tôi</h2>
+            <p className="text-slate-500 mt-3 max-w-lg mx-auto">Chúng tôi nằm ở trung tâm Quận 1, dễ dàng tiếp cận bằng xe máy, ô tô hoặc taxi.</p>
+          </motion.div>
+
+          <motion.div {...fadeInUp} transition={{ delay: 0.1 }}>
+            <MapEmbed
+              lat={10.7769}
+              lng={106.7009}
+              zoom={16}
+              height="420px"
+              address="123 Đường Y Tế, Phường Thú Cưng, Quận 1, TP.HCM"
+            />
+          </motion.div>
+
+          <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[
+              { icon: '🚗', label: 'Ô tô / Xe máy', value: 'Có bãi đỗ xe trong khuôn viên' },
+              { icon: '🚌', label: 'Xe buýt', value: 'Tuyến 04, 08, 52 — dừng ngay cổng' },
+              { icon: '🏍️', label: 'Grab / Be', value: 'Điểm đón thuận tiện, ngay mặt đường lớn' },
+            ].map(item => (
+              <div key={item.label} className="bg-white rounded-2xl p-4 border border-slate-200 flex items-center gap-3">
+                <span className="text-2xl">{item.icon}</span>
+                <div>
+                  <p className="font-semibold text-slate-900 text-sm">{item.label}</p>
+                  <p className="text-xs text-slate-500">{item.value}</p>
+                </div>
+              </div>
+            ))}
+          </motion.div>
         </div>
       </section>
     </div>

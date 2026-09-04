@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Menu, X, Stethoscope, CalendarCheck, BookOpen, PawPrint, User, LogOut, ChevronDown, LayoutDashboard, Sun, Moon, Bell } from 'lucide-react';
+import { Menu, X, Stethoscope, CalendarCheck, BookOpen, PawPrint, User, LogOut, ChevronDown, LayoutDashboard, Sun, Moon, Bell, Activity } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import { useBooking } from '../contexts/BookingContext';
@@ -128,7 +128,6 @@ export function Topbar() {
     { name: 'Blog & Cộng đồng', path: '/blog' },
     { name: 'Đặt lịch', path: '/booking', badge: cart.length > 0 ? cart.length : 0 },
     { name: 'Đánh giá', path: '/reviews' },
-    ...(user && user.role === 'customer' ? [{ name: 'Lịch hẹn của tôi', path: '/my-appointments' }] : []),
   ];
 
   const isActive = (path) => {
@@ -140,6 +139,7 @@ export function Topbar() {
     { icon: User, label: 'Thông tin tài khoản', path: '/profile' },
     { icon: CalendarCheck, label: 'Lịch hẹn của tôi', path: '/my-appointments' },
     { icon: PawPrint, label: 'Thú cưng của tôi', path: '/my-pets' },
+    { icon: Activity, label: 'Hồ sơ y tế', path: '/my-medical-records' },
     { icon: BookOpen, label: 'Bài viết của tôi', path: '/blog?tab=my' },
   ];
 
@@ -171,11 +171,11 @@ export function Topbar() {
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-0.5">
+        <nav className="hidden lg:flex items-center gap-1">
           {navLinks.map(link => (
             link.children ? (
               <div key={link.name} className="relative group px-1">
-                <button className={`flex items-center gap-1 px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5`}>
+                <button className={`flex items-center gap-1 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5`}>
                   {link.name}
                   <ChevronDown className="w-3.5 h-3.5 transition-transform group-hover:rotate-180" />
                 </button>
@@ -193,7 +193,7 @@ export function Topbar() {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`relative px-3.5 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`relative px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                   isActive(link.path)
                     ? 'text-teal-700 dark:text-teal-400 bg-teal-50 dark:bg-teal-500/10'
                     : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-white/5'

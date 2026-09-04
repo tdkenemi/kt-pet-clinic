@@ -1,6 +1,7 @@
 const Appointment = require('../models/Appointment');
 const Service = require('../models/Service');
 const Notification = require('../models/Notification');
+const { sendAppointmentReceiptEmail } = require('../utils/emailService');
 
 // [Customer/Admin] Đặt lịch hẹn
 exports.createAppointment = async (req, res) => {
@@ -94,7 +95,7 @@ exports.createAppointment = async (req, res) => {
 exports.MyAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find({ userId: req.user._id })
-      .populate('petId', 'name species')
+      .populate('petId')
       .sort({ createdAt: -1 });
     res.json(appointments);
   } catch (error) {
@@ -107,7 +108,7 @@ exports.getAllAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find({})
       .populate('userId', 'fullName email phone')
-      .populate('petId', 'name species weightKg')
+      .populate('petId')
       .sort({ createdAt: -1 });
     res.json(appointments);
   } catch (error) {
@@ -213,6 +214,15 @@ exports.confirmCashPayment = async (req, res) => {
     appointment.paymentStatus = 'Paid';
     appointment.paidAt = new Date();
     await appointment.save();
+
+    // Gửi email biên lai
+    await appointment.populate('userId', 'email fullName');
+    await appointment.populate('petId', 'name');
+    await appointment.populate('vetId', 'fullName phone');
+    if (appointment.userId && appointment.userId.email) {
+      await sendAppointmentReceiptEmail(appointment.userId.email, appointment);
+    }
+
     res.json({ message: 'Đã xác nhận thanh toán tiền mặt', appointment });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error: error.message });
@@ -354,6 +364,17 @@ exports.selectPaymentMethod = async (req, res) => {
 
     appointment.paymentMethod = paymentMethod;
     await appointment.save();
+
+    // Nếu chọn tiền mặt (thanh toán sau), gửi phiếu ngay lập tức
+    if (paymentMethod === 'Cash') {
+      await appointment.populate('userId', 'email fullName');
+      await appointment.populate('petId', 'name');
+      await appointment.populate('vetId', 'fullName phone');
+      if (appointment.userId && appointment.userId.email) {
+        await sendAppointmentReceiptEmail(appointment.userId.email, appointment);
+      }
+    }
+
     res.json({ message: 'Đã cập nhật phương thức thanh toán', appointment });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi server', error: error.message });

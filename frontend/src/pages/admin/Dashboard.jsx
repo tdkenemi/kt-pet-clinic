@@ -36,8 +36,22 @@ export default function Dashboard() {
       const pending = appointments.filter(a => a.status === 'pending');
       const cancelled = appointments.filter(a => a.status === 'cancelled');
       
-      const paid = appointments.filter(a => a.paymentStatus === 'Paid').length;
-      const unpaid = appointments.filter(a => a.paymentStatus === 'Pending' && a.status !== 'cancelled').length;
+      const now = new Date();
+      const thisYear = now.getFullYear();
+      const thisMonth = now.getMonth();
+
+      const paid = appointments.filter(a => 
+        a.paymentStatus === 'Paid' && 
+        new Date(a.paidAt || a.updatedAt).getMonth() === thisMonth &&
+        new Date(a.paidAt || a.updatedAt).getFullYear() === thisYear
+      ).length;
+      
+      const unpaid = appointments.filter(a => 
+        (a.paymentStatus === 'Pending' || a.paymentStatus === 'unpaid') && 
+        a.status !== 'cancelled' &&
+        new Date(a.date).getMonth() === thisMonth &&
+        new Date(a.date).getFullYear() === thisYear
+      ).length;
 
       setStats({
         totalCompleted: completed.length,
@@ -49,8 +63,7 @@ export default function Dashboard() {
         unpaid
       });
       
-      const now = new Date();
-      const thisYear = now.getFullYear();
+      // variables moved up
       
       const compArr = Array(12).fill(0);
       completed.forEach(a => {
@@ -92,6 +105,7 @@ export default function Dashboard() {
       trend: '+12% so với tháng trước', positive: true,
       bg: 'bg-white dark:bg-slate-900', ring: 'ring-1 ring-slate-200 dark:ring-white/10',
       iconBg: 'bg-brand-500/10 text-brand-500',
+      link: '/admin/appointments'
     },
     {
       id: 'pending',
@@ -100,6 +114,7 @@ export default function Dashboard() {
       positive: false,
       bg: 'bg-white dark:bg-slate-900', ring: 'ring-1 ring-slate-200 dark:ring-white/10',
       iconBg: 'bg-amber-500/10 text-amber-500',
+      link: '/admin/appointments'
     },
     {
       id: 'patients',
@@ -107,14 +122,16 @@ export default function Dashboard() {
       trend: '+18% khách hàng mới', positive: true,
       bg: 'bg-white dark:bg-slate-900', ring: 'ring-1 ring-slate-200 dark:ring-white/10',
       iconBg: 'bg-violet-500/10 text-violet-500',
+      link: '/admin/pets'
     },
     {
       id: 'revenue',
       label: 'Doanh thu tháng', value: `${(stats.totalRevenue / 1000000).toFixed(1)}M`, icon: DollarSign,
-      trend: `${stats.paid} đã TT / ${stats.unpaid} chưa TT`, positive: true,
+      trend: `${stats.paid} đã TT / ${stats.unpaid} chưa TT (tháng này)`, positive: true,
       bg: 'bg-gradient-to-br from-brand-500 to-brand-600', ring: 'ring-1 ring-brand-500/50 shadow-lg shadow-brand-500/20',
       iconBg: 'bg-white/20 text-white',
-      textClass: 'text-white', trendClass: 'text-brand-100'
+      textClass: 'text-white', trendClass: 'text-brand-100',
+      link: '/admin/revenue'
     },
   ];
 
@@ -184,8 +201,11 @@ export default function Dashboard() {
                 </p>
               </div>
 
-              <div className={`mt-4 text-xs font-medium ${stat.trendClass || (isDark ? 'text-brand-100' : 'text-slate-400 dark:text-slate-500')}`}>
-                {stat.trend}
+              <div className={`mt-4 flex items-center justify-between text-xs font-medium ${stat.trendClass || (isDark ? 'text-brand-100' : 'text-slate-400 dark:text-slate-500')}`}>
+                <span>{stat.trend}</span>
+                <Link to={stat.link} onClick={(e) => e.stopPropagation()} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/20' : 'hover:bg-slate-100 dark:hover:bg-white/10'} hover:scale-110`}>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
               </div>
             </motion.div>
           );

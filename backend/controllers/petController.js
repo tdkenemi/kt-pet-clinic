@@ -2,10 +2,13 @@ const Pet = require('../models/Pet');
 
 // [Customer/Admin] Thêm thú cưng
 exports.addPet = async (req, res) => {
-  const { name, species, breed, age, weightKg, ownerId } = req.body;
+  const { name, species, breed, age, weightKg, ownerId, gender, color, microchipId, image, gallery } = req.body;
   try {
     const pet = await Pet.create({
       name, species, breed, age, weightKg,
+      gender: gender || 'unknown',
+      color, microchipId,
+      image, gallery: gallery || [],
       ownerId: req.user.role === 'admin' && ownerId ? ownerId : req.user._id
     });
     res.status(201).json(pet);
@@ -44,9 +47,15 @@ exports.updatePet = async (req, res) => {
       return res.status(401).json({ message: 'Không có quyền sửa' });
     }
 
-    const updates = { ...req.body };
-    if (req.user.role !== 'admin') {
-      delete updates.ownerId; // Khách hàng không được tự đổi chủ sở hữu
+    // Whitelist các field được phép cập nhật
+    const allowedFields = ['name', 'species', 'breed', 'age', 'weightKg', 'medicalHistory', 
+                           'gender', 'color', 'microchipId', 'image', 'gallery'];
+    const updates = {};
+    allowedFields.forEach(field => {
+      if (req.body[field] !== undefined) updates[field] = req.body[field];
+    });
+    if (req.user.role === 'admin' && req.body.ownerId) {
+      updates.ownerId = req.body.ownerId;
     }
 
     const updated = await Pet.findByIdAndUpdate(req.params.id, updates, { new: true });

@@ -21,6 +21,7 @@ import Reviews from './pages/Reviews.jsx';
 import Blog from './pages/Blog.jsx';
 import MyProfile from './pages/MyProfile.jsx';
 import MyPets from './pages/MyPets.jsx';
+import MyMedicalRecords from './pages/MyMedicalRecords.jsx';
 import AdminLayout from './pages/admin/AdminLayout.jsx';
 import Dashboard from './pages/admin/Dashboard.jsx';
 import AdminAppointments from './pages/admin/AdminAppointments.jsx';
@@ -34,6 +35,7 @@ import Revenue from './pages/admin/Revenue.jsx';
 import MedicalRecords from './pages/admin/MedicalRecords.jsx';
 import Settings from './pages/admin/Settings.jsx';
 import { AdminChat } from './pages/admin/AdminChat.jsx';
+import AdminReviews from './pages/admin/AdminReviews.jsx';
 import PaymentReturn from './pages/PaymentReturn.jsx';
 import AboutUs from './pages/AboutUs.jsx';
 
@@ -63,6 +65,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                       <Route path="profile" element={<MyProfile />} />
                       {/* /my-pets quản lý thú cưng của user */}
                       <Route path="my-pets" element={<MyPets />} />
+                      <Route path="my-medical-records" element={<MyMedicalRecords />} />
                     </Route>
                     
                     <Route path="/admin" element={<AdminLayout />}>
@@ -77,6 +80,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                       <Route path="revenue" element={<Revenue />} />
                       <Route path="chat" element={<AdminChat />} />
                       <Route path="medical-records" element={<MedicalRecords />} />
+                      <Route path="reviews" element={<AdminReviews />} />
                       <Route path="settings" element={<Settings />} />
                     </Route>
                   </Routes>

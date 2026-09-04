@@ -3,11 +3,14 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   CalendarCheck, Clock, MapPin, Phone, User, FileText,
-  CheckCircle, XCircle, Plus, ChevronRight, Bell, MessageSquare, QrCode, RefreshCw, Trash2, Banknote, CreditCard, AlertCircle
+  CheckCircle, XCircle, Plus, ChevronRight, Bell, MessageSquare, QrCode, RefreshCw, Trash2, Banknote, CreditCard, AlertCircle, Star, Upload, X, Download
 } from 'lucide-react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAlert } from '../contexts/AlertContext';
 import { Link } from 'react-router-dom';
+import PetDetailsModal from '../components/PetDetailsModal';
 
 const getUser = () => {
   try { return JSON.parse(sessionStorage.getItem('user') || 'null'); }
@@ -21,12 +24,21 @@ export default function MyAppointments() {
   const [vnpayLoading, setVnpayLoading] = useState(false);
   const [cancelReason, setCancelReason] = useState('');
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [isPetModalOpen, setIsPetModalOpen] = useState(false);
+  const [selectedPetForModal, setSelectedPetForModal] = useState(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [paymentStep, setPaymentStep] = useState('select'); // 'select', 'qr', 'cash'
   const [paymentData, setPaymentData] = useState(null);
   const { showAlert, showConfirm } = useAlert();
   const user = getUser();
   const { t, formatCurrency } = useLanguage();
+
+  // Review state
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [reviewedIds, setReviewedIds] = useState(new Set()); // IDs đã đánh giá
+  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '', images: [] });
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewAptId, setReviewAptId] = useState(null);
 
   useEffect(() => {
     if (!user) { window.location.href = '/login'; return; }
@@ -53,6 +65,18 @@ export default function MyAppointments() {
       if (selectedApt) {
         const updatedApt = res.data.find(a => a._id === selectedApt._id);
         if (updatedApt) setSelectedApt(updatedApt);
+      }
+      // Check reviewed status for completed appointments
+      const completedIds = res.data.filter(a => a.status === 'completed').map(a => a._id);
+      if (completedIds.length > 0) {
+        const checks = await Promise.all(
+          completedIds.map(id =>
+            axios.get(`/api/reviews/check/${id}`, { headers: { Authorization: `Bearer ${user.token}` } })
+              .then(r => ({ id, reviewed: r.data.reviewed }))
+              .catch(() => ({ id, reviewed: false }))
+          )
+        );
+        setReviewedIds(new Set(checks.filter(c => c.reviewed).map(c => c.id)));
       }
     } catch (error) {
       console.error(error);
@@ -93,15 +117,17 @@ export default function MyAppointments() {
   };
 
   const handleConfirmPayment = async () => {
-    // Để bảo mật đồ án (Không tin tưởng Frontend tự ý đổi trạng thái):
-    // Nút này chỉ có nhiệm vụ gọi lại fetchAppointments() để cập nhật trạng thái mới nhất từ Webhook của ngân hàng.
     try {
       setLoading(true);
+      // GỌI MOCK WEBHOOK ĐỂ GIẢ LẬP NGÂN HÀNG TRẢ KẾT QUẢ NGAY LẬP TỨC CHO ĐỒ ÁN
+      await axios.post('/api/payments/mock-webhook', { appointmentId: paymentData.appointmentId }, {
+        headers: { Authorization: `Bearer ${user.token}` }
+      });
       await fetchAppointments();
       showAlert(
-        'Đang kiểm tra', 
-        'Chúng tôi đang kiểm tra giao dịch của bạn với ngân hàng. Hệ thống sẽ tự động cập nhật khi tiền vào tài khoản.', 
-        'info'
+        'Thanh toán thành công', 
+        'Hệ thống đã ghi nhận thanh toán của bạn qua mã QR!', 
+        'success'
       );
       setIsPaymentModalOpen(false);
     } catch (e) {
@@ -123,6 +149,27 @@ export default function MyAppointments() {
         showAlert('Lỗi', e.response?.data?.message || 'Lỗi xóa dịch vụ', 'error');
       }
     });
+  };
+
+  const handleExportPDF = async () => {
+    const input = document.getElementById('invoice-content');
+    if (!input) return;
+    try {
+      setLoading(true);
+      // Giữ background trắng, scale cao để nét
+      const canvas = await html2canvas(input, { scale: 2, backgroundColor: '#ffffff' });
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save(`KT_PetClinic_Invoice_${selectedApt._id.slice(-6)}.pdf`);
+    } catch (error) {
+      console.error(error);
+      showAlert('Lỗi', 'Không thể xuất PDF', 'error');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCashPayment = () => {
@@ -161,6 +208,46 @@ export default function MyAppointments() {
       showAlert('Lỗi', err.response?.data?.message || 'Lỗi kết nối cổng VNPay Sandbox', 'error');
     } finally {
       setVnpayLoading(false);
+    }
+  };
+
+  const openReviewModal = (aptId) => {
+    setReviewAptId(aptId);
+    setReviewForm({ rating: 5, comment: '', images: [] });
+    setIsReviewModalOpen(true);
+  };
+
+  const handleReviewImageUpload = (e) => {
+    const files = Array.from(e.target.files).slice(0, 3);
+    const toBase64 = file => new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+    Promise.all(files.map(toBase64)).then(imgs => {
+      setReviewForm(prev => ({ ...prev, images: [...prev.images, ...imgs].slice(0, 3) }));
+    });
+  };
+
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!reviewAptId) return;
+    setReviewSubmitting(true);
+    try {
+      await axios.post('/api/reviews', {
+        appointmentId: reviewAptId,
+        rating: reviewForm.rating,
+        comment: reviewForm.comment,
+        images: reviewForm.images,
+      }, { headers: { Authorization: `Bearer ${user.token}` } });
+      setReviewedIds(prev => new Set([...prev, reviewAptId]));
+      setIsReviewModalOpen(false);
+      showAlert('Cảm ơn!', 'Đánh giá của bạn đã được ghi nhận 🐾', 'success');
+    } catch (err) {
+      showAlert('Lỗi', err.response?.data?.message || 'Gửi đánh giá thất bại', 'error');
+    } finally {
+      setReviewSubmitting(false);
     }
   };
 
@@ -239,7 +326,19 @@ export default function MyAppointments() {
                             <span className="text-sm">🐾</span>
                           </div>
                           <h3 className="font-semibold text-slate-900 truncate">
-                            {app.petId?.name || 'Thú cưng'} • {app.services?.map(s => s.name).join(', ') || app.service}
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedPetForModal(app.petId);
+                                setIsPetModalOpen(true);
+                              }}
+                              className="hover:text-blue-600 hover:underline transition-colors focus:outline-none"
+                            >
+                              {app.petId?.name || 'Thú cưng'}
+                            </button>
+                            <span className="mx-1.5 text-slate-400">•</span>
+                            <span className="text-sm">{app.services?.map(s => s.name).join(', ') || app.service}</span>
                           </h3>
                         </div>
                         <p className="text-sm text-slate-500 pl-10 line-clamp-1">{app.reason}</p>
@@ -313,17 +412,23 @@ export default function MyAppointments() {
                     animate={{ opacity: 1, y: 0 }}
                     className="bg-white text-slate-900 border border-slate-200 rounded-3xl p-7 shadow-xl"
                   >
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
-                        <FileText className="w-5 h-5 text-blue-600" />
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center">
+                          <FileText className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-lg text-slate-900">Phiếu Lịch Hẹn</h3>
+                          <p className="text-slate-500 text-xs">Chi tiết từ phòng khám</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="font-bold text-lg text-slate-900">Phiếu Lịch Hẹn</h3>
-                        <p className="text-slate-500 text-xs">Chi tiết từ phòng khám</p>
-                      </div>
+                      <button onClick={handleExportPDF} className="p-2 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 hover:text-slate-900 transition flex items-center justify-center" title="Xuất PDF">
+                        <Download className="w-5 h-5" />
+                      </button>
                     </div>
 
-                    {/* KHỐI THANH TOÁN (ĐƯA LÊN TRÊN) */}
+                    <div id="invoice-content" className="p-2 bg-white rounded-xl">
+                      {/* KHỐI THANH TOÁN (ĐƯA LÊN TRÊN) */}
                     {(selectedApt.status === 'completed' || selectedApt.status === 'confirmed') && selectedApt.billingDetails?.price !== undefined && (
                       <div className="mb-6 bg-gradient-to-br from-blue-50/50 to-indigo-50/50 border border-blue-100 rounded-2xl p-5 shadow-sm">
                         <div className="flex justify-between items-center mb-4">
@@ -382,7 +487,19 @@ export default function MyAppointments() {
                     <div className="space-y-4">
                       <div className="bg-slate-50 border border-slate-100 rounded-xl p-4">
                         <p className="text-slate-400 text-xs uppercase tracking-widest mb-1">Thú cưng</p>
-                        <p className="font-semibold text-lg text-slate-900">{selectedApt.petId?.name}</p>
+                        <p className="font-semibold text-lg text-slate-900 flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedPetForModal(selectedApt.petId);
+                              setIsPetModalOpen(true);
+                            }}
+                            className="hover:text-blue-600 hover:underline transition-colors flex items-center gap-2 focus:outline-none"
+                          >
+                            <span>🐾 {selectedApt.petId?.name}</span>
+                          </button>
+                        </p>
                         <div className="mt-2 space-y-1">
                           {selectedApt.services?.map((s, idx) => (
                             <div key={idx} className="flex items-center justify-between text-sm">
@@ -501,6 +618,23 @@ export default function MyAppointments() {
                           <XCircle className="w-4 h-4" /> Hủy lịch hẹn này
                         </button>
                       )}
+
+                      {/* Nút đánh giá — chỉ hiện khi đã hoàn thành */}
+                      {selectedApt.status === 'completed' && (
+                        reviewedIds.has(selectedApt._id) ? (
+                          <div className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 font-semibold text-sm">
+                            <Star className="w-4 h-4 fill-amber-400 text-amber-400" /> Bạn đã đánh giá lịch khám này
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => openReviewModal(selectedApt._id)}
+                            className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-sm hover:from-amber-600 hover:to-orange-600 transition-all shadow-md shadow-amber-500/20"
+                          >
+                            <Star className="w-4 h-4 fill-white text-white" /> Đánh giá dịch vụ
+                          </button>
+                        )
+                      )}
+                    </div>
                     </div>
                   </motion.div>
                 ) : (
@@ -678,6 +812,117 @@ export default function MyAppointments() {
             </motion.div>
           </div>
         )}
+
+        {/* Review Modal */}
+        <AnimatePresence>
+          {isReviewModalOpen && (
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-white rounded-3xl shadow-2xl w-full max-w-md overflow-hidden"
+              >
+                {/* Header */}
+                <div className="flex justify-between items-center p-6 border-b border-slate-100 bg-amber-50/50">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                      <Star className="w-5 h-5 text-amber-500 fill-amber-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-slate-900">Đánh giá dịch vụ</h3>
+                      <p className="text-xs text-slate-500">Chia sẻ trải nghiệm của bạn tại KT Pet Clinic</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setIsReviewModalOpen(false)} className="p-2 rounded-xl text-slate-400 hover:bg-slate-200 transition">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                <form onSubmit={handleSubmitReview} className="p-6 space-y-5">
+                  {/* Star selector */}
+                  <div>
+                    <p className="text-sm font-semibold text-slate-700 mb-3">Bạn hài lòng thế nào?</p>
+                    <div className="flex gap-2 justify-center">
+                      {[1, 2, 3, 4, 5].map(star => (
+                        <button
+                          key={star}
+                          type="button"
+                          onClick={() => setReviewForm(prev => ({ ...prev, rating: star }))}
+                          className="transition-transform hover:scale-110 active:scale-95"
+                        >
+                          <Star
+                            className={`w-10 h-10 transition-colors ${
+                              star <= reviewForm.rating
+                                ? 'fill-amber-400 text-amber-400'
+                                : 'text-slate-200 fill-slate-100'
+                            }`}
+                          />
+                        </button>
+                      ))}
+                    </div>
+                    <p className="text-center text-sm font-medium text-amber-600 mt-2">
+                      {['', 'Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Rất tuyệt! 🎉'][reviewForm.rating]}
+                    </p>
+                  </div>
+
+                  {/* Comment */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Nhận xét của bạn</label>
+                    <textarea
+                      rows={3}
+                      value={reviewForm.comment}
+                      onChange={e => setReviewForm(prev => ({ ...prev, comment: e.target.value }))}
+                      placeholder="Bác sĩ có nhiệt tình không? Phòng khám có sạch sẽ không?..."
+                      className="input-field resize-none"
+                    />
+                  </div>
+
+                  {/* Image upload */}
+                  <div>
+                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Ảnh minh chứng (tối đa 3 ảnh)</label>
+                    <div className="flex gap-2 flex-wrap">
+                      {reviewForm.images.map((img, i) => (
+                        <div key={i} className="relative">
+                          <img src={img} alt="" className="w-20 h-20 rounded-xl object-cover border border-slate-200" />
+                          <button
+                            type="button"
+                            onClick={() => setReviewForm(prev => ({ ...prev, images: prev.images.filter((_, idx) => idx !== i) }))}
+                            className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 text-white rounded-full flex items-center justify-center text-xs"
+                          >×</button>
+                        </div>
+                      ))}
+                      {reviewForm.images.length < 3 && (
+                        <label className="w-20 h-20 rounded-xl border-2 border-dashed border-slate-200 flex flex-col items-center justify-center gap-1 cursor-pointer hover:border-amber-400 hover:bg-amber-50 transition">
+                          <Upload className="w-5 h-5 text-slate-400" />
+                          <span className="text-xs text-slate-400">Thêm</span>
+                          <input type="file" accept="image/*" multiple className="sr-only" onChange={handleReviewImageUpload} />
+                        </label>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button type="button" onClick={() => setIsReviewModalOpen(false)} className="btn-secondary flex-1 py-3 font-semibold">Hủy</button>
+                    <button
+                      type="submit"
+                      disabled={reviewSubmitting}
+                      className="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold hover:from-amber-600 hover:to-orange-600 transition-all disabled:opacity-50"
+                    >
+                      {reviewSubmitting ? 'Đang gửi...' : 'Gửi đánh giá ⭐'}
+                    </button>
+                  </div>
+                </form>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+
+        <PetDetailsModal 
+          pet={selectedPetForModal} 
+          isOpen={isPetModalOpen} 
+          onClose={() => setIsPetModalOpen(false)} 
+        />
       </div>
     </div>
   );

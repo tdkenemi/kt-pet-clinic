@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Eye, Trash2, X, Search, Users, Phone, Mail, PawPrint, CalendarCheck, Edit2, Shield, Save } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAlert } from '../../contexts/AlertContext';
+import PetDetailsModal from '../../components/PetDetailsModal';
 
 const ROLE_LABELS = {
   customer: { label: 'Khách hàng', className: 'badge-confirmed' },
@@ -17,6 +18,8 @@ export default function Customers() {
   const [pets, setPets] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPetModalOpen, setIsPetModalOpen] = useState(false);
+  const [selectedPet, setSelectedPet] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editForm, setEditForm] = useState({ fullName: '', phone: '', role: 'customer' });
   const [search, setSearch] = useState('');
@@ -328,12 +331,20 @@ export default function Customers() {
                     ) : (
                       <div className="flex flex-col gap-3">
                         {pets.map(p => (
-                          <div key={p._id} className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-2xl shrink-0">
-                              {p.species === 'Chó' ? '🐕' : p.species === 'Mèo' ? '🐈' : '🐾'}
+                          <div 
+                            key={p._id} 
+                            onClick={() => { setSelectedPet(p); setIsPetModalOpen(true); }}
+                            className="bg-white dark:bg-slate-950 border border-slate-200 dark:border-white/10 rounded-2xl p-4 flex items-center gap-4 cursor-pointer hover:border-brand-300 dark:hover:border-brand-500/50 hover:shadow-md transition-all group"
+                          >
+                            <div className="w-12 h-12 rounded-full bg-slate-50 dark:bg-slate-900 flex items-center justify-center text-2xl shrink-0 overflow-hidden group-hover:scale-105 transition-transform">
+                              {p.image ? (
+                                <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                              ) : (
+                                p.species === 'Chó' ? '🐕' : p.species === 'Mèo' ? '🐈' : '🐾'
+                              )}
                             </div>
                             <div className="min-w-0">
-                              <p className="font-bold text-slate-900 dark:text-white truncate">{p.name}</p>
+                              <p className="font-bold text-slate-900 dark:text-white truncate group-hover:text-brand-600 dark:group-hover:text-brand-400 transition-colors">{p.name}</p>
                               <p className="text-xs font-medium text-slate-500 dark:text-slate-400">{p.species}{p.breed ? ` · ${p.breed}` : ''}</p>
                             </div>
                           </div>
@@ -378,6 +389,12 @@ export default function Customers() {
           </div>
         )}
       </AnimatePresence>
+      
+      <PetDetailsModal 
+        pet={selectedPet} 
+        isOpen={isPetModalOpen} 
+        onClose={() => setIsPetModalOpen(false)} 
+      />
     </div>
   );
 }

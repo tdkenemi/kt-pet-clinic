@@ -3,7 +3,7 @@ import { Outlet, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, Calendar, Users, PawPrint, LogOut, Settings,
   FileText, Bell, ArrowLeft, Menu, X, Stethoscope, BookOpen, Activity, DollarSign,
-  ChevronRight, Syringe, CreditCard, ClipboardList, Sun, Moon, MessageCircle
+  ChevronRight, Syringe, CreditCard, ClipboardList, Sun, Moon, MessageCircle, Star
 } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -116,6 +116,7 @@ export default function AdminLayout() {
     { path: '/admin/chat', name: 'Tin nhắn', icon: MessageCircle, badge: unreadChat },
     { path: '/admin/blogs', name: 'Blog', icon: BookOpen },
     { path: '/admin/medical-records', name: 'Hồ sơ y tế', icon: FileText },
+    { path: '/admin/reviews', name: 'Đánh giá KH', icon: Star },
     { path: '/admin/settings', name: 'Cài đặt', icon: Settings },
   ];
 

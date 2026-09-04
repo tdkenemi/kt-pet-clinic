@@ -21,6 +21,31 @@ exports.getAllRecords = async (req, res) => {
   }
 };
 
+// Lấy danh sách bệnh án của user hiện tại
+exports.getMyRecords = async (req, res) => {
+  try {
+    // 1. Lấy tất cả lịch hẹn của user này
+    const appointments = await Appointment.find({ userId: req.user._id }).select('_id');
+    const aptIds = appointments.map(a => a._id);
+
+    // 2. Lấy bệnh án thuộc các lịch hẹn trên
+    const records = await MedicalRecord.find({ appointmentId: { $in: aptIds } })
+      .populate({
+        path: 'appointmentId',
+        select: 'date timeSlot services vetId petId',
+        populate: [
+          { path: 'vetId', select: 'fullName' },
+          { path: 'petId', select: 'name species breed image' }
+        ]
+      })
+      .sort({ createdAt: -1 });
+      
+    res.json(records);
+  } catch (error) {
+    res.status(500).json({ message: 'Lỗi server', error: error.message });
+  }
+};
+
 // Lấy bệnh án theo ID thú cưng
 exports.getRecordsByPet = async (req, res) => {
   try {

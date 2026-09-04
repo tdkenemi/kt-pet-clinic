@@ -50,7 +50,7 @@ export function FloatingChatbot() {
 
     try {
       const history = messages.slice(-6).map(m => ({ sender: m.sender, text: m.text }));
-      const res = await axios.post('/api/chatbot/ask', { question, history });
+      const res = await axios.post('/api/chatbot/ask', { question, history }, { timeout: 10000 });
       setMessages(prev => [...prev, { sender: 'bot', text: res.data.answer, time: new Date() }]);
     } catch {
       setMessages(prev => [...prev, {

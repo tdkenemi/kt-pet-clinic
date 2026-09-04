@@ -1,4 +1,4 @@
-﻿<div align="center">
+<div align="center">
 
 # 🐾 KT Pet Clinic
 
@@ -25,11 +25,14 @@
 |-----------|-------|
 | 🔐 Xác thực đa phương thức | Đăng nhập Email/Password + Google OAuth 2.0 |
 | 📧 Quên mật khẩu OTP | OTP 6 số gửi qua Gmail SMTP, hiệu lực 10 phút |
-| 🐾 Quản lý Thú cưng | Hồ sơ y tế đầy đủ: loài, giống, cân nặng, lịch sử bệnh |
+| 🐾 Quản lý Thú cưng | Sổ tiêm phòng điện tử, Cập nhật lịch sử bệnh án, Thư viện ảnh cá nhân |
 | 📅 Đặt lịch hẹn (Wizard) | 5 bước trực quan: Thú cưng → Dịch vụ → Bác sĩ/Ngày giờ → Địa điểm → Thanh toán |
 | 💳 Thanh toán đa hình thức | VNPay (HMAC-SHA512) + VietQR (tự động đối soát) + Tiền mặt |
-| 🔔 Thông báo Real-time | Socket.io push notification khi lịch được duyệt/cập nhật |
+| 📄 Xuất PDF Phiếu Khám | Trích xuất hóa đơn và chi tiết lịch hẹn sang file PDF chuyên nghiệp |
+| ⭐ Đánh giá dịch vụ | Hệ thống rating 5 sao và bình luận sau khi hoàn thành dịch vụ |
+| 🔔 Thông báo & Nhắc lịch | Socket.io push notification + Auto Email Reminder nhắc lịch trước 1 ngày |
 | 💬 Live Chat & AI Chatbot | Chat với Admin + Trợ lý AI (Gemini) tư vấn thú y |
+| 🗺️ Bản đồ & Định vị | Tích hợp bản đồ Leaflet OpenStreetMap chỉ đường tới phòng khám |
 
 ### 🛡️ Phân hệ Quản trị (Admin Dashboard)
 
@@ -269,9 +272,66 @@ kt-clinic/
 - [x] Live Chat thời gian thực (Socket.io)
 - [x] AI Chatbot (Gemini)
 - [x] Admin Dashboard + Recharts
-- [ ] Google Maps cho dịch vụ tại nhà
-- [ ] Nhắc lịch tự động qua Email/SMS
+- [x] Tích hợp Bản đồ chỉ đường (Leaflet)
+- [x] Nhắc lịch tự động qua Email (Cronjob)
+- [x] Xuất PDF Phiếu Khám
+- [x] Sổ tiêm phòng điện tử
+- [x] Hệ thống Đánh giá 5 sao
 - [ ] Ứng dụng Mobile (React Native)
+
+---
+
+## 📸 Giao diện chức năng (Screenshots)
+
+*(Dán các hình ảnh giao diện của bạn vào các mục dưới đây)*
+
+### 1. Trang chủ & Đặt lịch hẹn
+<!-- Chèn ảnh Trang chủ tại đây: ![Trang chủ](link_anh) -->
+<br>
+
+<!-- Chèn ảnh Form đặt lịch tại đây: ![Đặt lịch](link_anh) -->
+<br>
+
+### 2. Quản lý Thú cưng & Sổ tiêm phòng
+<!-- Chèn ảnh Quản lý thú cưng tại đây: ![Thú cưng](link_anh) -->
+<br>
+
+### 3. Tích hợp Thanh toán (VNPay / VietQR)
+<!-- Chèn ảnh Màn hình thanh toán tại đây: ![Thanh toán](link_anh) -->
+<br>
+
+### 4. Admin Dashboard
+<!-- Chèn ảnh Dashboard tại đây: ![Dashboard](link_anh) -->
+<br>
+
+---
+
+## ⚙️ Luồng hoạt động chi tiết (Backend Workflows)
+
+### 1. Luồng Đặt lịch hẹn (Booking Flow)
+1. **Khách hàng** chọn thú cưng, dịch vụ, bác sĩ và thời gian.
+2. `appointmentController` kiểm tra tính hợp lệ và **Double-booking** (trùng lịch bác sĩ) thông qua compound index `{date, timeSlot, vetId}`.
+3. Lịch hẹn được tạo với trạng thái `pending`.
+4. **Socket.io** bắn event `new_appointment` đến phòng `admin_room` để Admin nhận thông báo realtime.
+
+### 2. Luồng Thanh toán VNPay
+1. `paymentController` nhận thông tin hóa đơn và tạo chuỗi URL ký bằng **HMAC-SHA512** dựa trên `VNP_HASH_SECRET`.
+2. Khách hàng thanh toán trên cổng VNPay.
+3. VNPay redirect về endpoint `/api/payments/vnpay/verify-return`.
+4. Backend kiểm tra chữ ký hợp lệ. Nếu thành công, cập nhật trạng thái hóa đơn thành `Paid` và trạng thái lịch hẹn thành `confirmed`.
+5. Tạo bản ghi `PaymentTransaction` lưu lịch sử giao dịch.
+
+### 3. Luồng Thanh toán VietQR (Casso Webhook)
+1. Casso nhận biến động số dư từ ngân hàng và gọi **POST Webhook** về `/api/payments/webhook`.
+2. Backend kiểm tra `CASSO_SECURE_TOKEN` trong header để xác thực request.
+3. Trích xuất mã đơn hàng (Mã giao dịch) từ chuỗi mô tả chuyển khoản (ví dụ: `KTPET <MãLịchHẹn>`).
+4. Tìm và cập nhật trạng thái thanh toán của lịch hẹn tương ứng thành `Paid`.
+5. Bắn event Socket.io cho Admin và User cập nhật trạng thái đơn hàng ngay lập tức.
+
+### 4. Luồng Xác thực (Authentication)
+1. Đăng ký tài khoản: Mật khẩu được băm (hash) bằng `bcryptjs` với salt 10 rounds.
+2. Đăng nhập: Trả về **JWT Token** có thời hạn (ví dụ: 7 ngày). API được bảo vệ bởi middleware `protect` (kiểm tra token) và `admin` (kiểm tra Role).
+3. Đăng nhập Google: Frontend lấy Google Credential gửi về backend. Backend dùng `google-auth-library` verify token, nếu email chưa tồn tại thì tạo user mới, ngược lại trả về JWT.
 
 ---
 

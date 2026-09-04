@@ -39,3 +39,12 @@ Thumbs.db
 server-out.log
 server-err.log
 server-test.log
+
+# ===== Internal / không cần thiết cho người xem GitHub =====
+.agents/
+PRODUCT.md
+*.docx
+frontend/replace_colors.cjs
+backend/test_create_apt.js
+old_booking.txt
+BaoCao_DoAn.md

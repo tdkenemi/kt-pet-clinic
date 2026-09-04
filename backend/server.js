@@ -4,6 +4,8 @@ const { Server } = require('socket.io');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const authRoutes = require('./routes/authRoutes');
 const petRoutes = require('./routes/petRoutes');
@@ -16,6 +18,8 @@ const serviceRoutes = require('./routes/serviceRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const messageRoutes = require('./routes/messageRoutes');
+const reviewRoutes = require('./routes/reviewRoutes');
+const vaccinationRoutes = require('./routes/vaccinationRoutes');
 
 const app = express();
 const server = http.createServer(app);
@@ -81,6 +85,32 @@ app.use(cors({
 
 app.use(express.json({ limit: '20mb' }));
 app.use(express.urlencoded({ extended: true, limit: '20mb' }));
+
+// ===== BẢO MẬT (SECURITY MIDDLEWARES) =====
+// 1. Set security HTTP headers
+app.use(helmet());
+
+// (Lưu ý: express-mongo-sanitize và xss-clean bị loại bỏ do không tương thích Express 5)
+
+// 2. Rate limiting (Toàn cục)
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 phút
+  max: 200, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
+  message: 'Quá nhiều yêu cầu từ IP của bạn, vui lòng thử lại sau 15 phút.',
+  standardHeaders: true, 
+  legacyHeaders: false,
+});
+app.use('/api', limiter);
+
+// 5. Rate limiting chặt chẽ hơn cho Auth
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, 
+  max: 10, // 10 attempts per 15 minutes for auth endpoints
+  message: 'Quá nhiều yêu cầu đăng nhập/quên mật khẩu, vui lòng thử lại sau.',
+});
+app.use('/api/auth/login', authLimiter);
+app.use('/api/auth/forgot-password', authLimiter);
+// ==========================================
 
 const seedAdmin = async () => {
   const User = require('./models/User');
@@ -157,6 +187,8 @@ app.use('/api/payments', paymentRoutes);
 app.use('/api/medical-records', medicalRecordRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/messages', messageRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/vaccinations', vaccinationRoutes);
 
 // Health check
 app.get('/', (req, res) => {
@@ -201,9 +233,10 @@ const cleanupPendingAppointments = async () => {
     console.error('[Auto-Cleanup Error]', error);
   }
 };
-
-// Chạy 1 phút một lần
 setInterval(cleanupPendingAppointments, 60 * 1000);
+
+// Initialize Reminder Service (Cron jobs)
+require('./utils/reminderService')(io);
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => console.log(`🚀 Server đang chạy tại port ${PORT}`));

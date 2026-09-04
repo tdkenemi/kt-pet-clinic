@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Leaflet map z-index fix */
+.leaflet-pane { z-index: 1; }
+.leaflet-top, .leaflet-bottom { z-index: 2; }
+
+
 @layer base {
   :root {
     /* === KT Pet Clinic Design Tokens (Impeccable Edition) === */

@@ -1,6 +1,7 @@
 const { buildVietQRUrl } = require('../utils/pricing');
 const Appointment = require('../models/Appointment');
 const PaymentTransaction = require('../models/PaymentTransaction');
+const { sendAppointmentReceiptEmail } = require('../utils/emailService');
 
 // Thông tin ngân hàng phòng khám (có thể đưa vào .env)
 const BANK_CONFIG = {
@@ -86,6 +87,15 @@ exports.confirmPayment = async (req, res) => {
     appointment.paidAt = new Date();
 
     await appointment.save();
+
+    // Gửi email biên lai
+    await appointment.populate('userId', 'email fullName');
+    await appointment.populate('petId', 'name');
+    await appointment.populate('vetId', 'fullName phone');
+    if (appointment.userId && appointment.userId.email) {
+      await sendAppointmentReceiptEmail(appointment.userId.email, appointment);
+    }
+
     res.json({ message: 'Đã ghi nhận thanh toán thành công', appointment });
   } catch (error) {
     res.status(500).json({ message: 'Lỗi xác nhận thanh toán', error: error.message });
@@ -145,6 +155,14 @@ exports.vietqrWebhook = async (req, res) => {
           appointment.paymentMethod = 'QR';
           appointment.paidAt = new Date();
           await appointment.save();
+
+          await appointment.populate('userId', 'email fullName');
+          await appointment.populate('petId', 'name');
+          await appointment.populate('vetId', 'fullName phone');
+          if (appointment.userId && appointment.userId.email) {
+            await sendAppointmentReceiptEmail(appointment.userId.email, appointment);
+          }
+
           console.log(`[Webhook] Thanh toán QR (format cũ): ${oldMatch[1]}`);
         }
       }
@@ -186,6 +204,13 @@ exports.vietqrWebhook = async (req, res) => {
     appointment.paymentMethod = 'QR';
     appointment.paidAt = new Date();
     await appointment.save();
+
+    await appointment.populate('userId', 'email fullName');
+    await appointment.populate('petId', 'name');
+    await appointment.populate('vetId', 'fullName phone');
+    if (appointment.userId && appointment.userId.email) {
+      await sendAppointmentReceiptEmail(appointment.userId.email, appointment);
+    }
 
     console.log(`[Webhook] ✅ Thanh toán QR thành công: ${appointment._id} — ${tx.amount}đ`);
     return res.status(200).json({ success: true, message: 'Payment confirmed via webhook' });
@@ -452,6 +477,13 @@ exports.verifyVNPayReturn = async (req, res) => {
           providerTransactionId: vnp_Params['vnp_TransactionNo'] || vnp_Params['vnp_BankTranNo'] || txnRef,
           paidAt: new Date()
         });
+
+        await appointment.populate('userId', 'email fullName');
+        await appointment.populate('petId', 'name');
+        await appointment.populate('vetId', 'fullName phone');
+        if (appointment.userId && appointment.userId.email) {
+          await sendAppointmentReceiptEmail(appointment.userId.email, appointment);
+        }
       }
 
       return res.json({
