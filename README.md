@@ -283,13 +283,20 @@ kt-clinic/
 
 ## 📸 Giao diện chức năng (Screenshots)
 
-*(Dán các hình ảnh giao diện của bạn vào các mục dưới đây)*
-
 ### 1. Trang chủ & Đặt lịch hẹn
-<!-- Chèn ảnh Trang chủ tại đây: ![Trang chủ](link_anh) -->
+![Trang chủ](screenshots/home.png)
 <br>
 
-<!-- Chèn ảnh Form đặt lịch tại đây: ![Đặt lịch](link_anh) -->
+![Chọn thú cưng](screenshots/booking_pet.png)
+<br>
+
+![Chọn dịch vụ](screenshots/booking_service.png)
+<br>
+
+![Chọn ngày giờ](screenshots/booking_time.png)
+<br>
+
+![Đặt lịch thành công](screenshots/booking_success.png)
 <br>
 
 ### 2. Quản lý Thú cưng & Sổ tiêm phòng
