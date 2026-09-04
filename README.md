@@ -304,7 +304,19 @@ kt-clinic/
 <br>
 
 ### 3. Tích hợp Thanh toán (VNPay / VietQR)
-<!-- Chèn ảnh Màn hình thanh toán tại đây: ![Thanh toán](link_anh) -->
+![Danh sách lịch hẹn](screenshots/payment_appointments.png)
+<br>
+
+![Chọn phương thức thanh toán](screenshots/payment_methods.png)
+<br>
+
+![Cổng thanh toán VNPay](screenshots/vnpay_gateway.png)
+<br>
+
+![Thanh toán VNPay Test](screenshots/vnpay_checkout.png)
+<br>
+
+![Thanh toán thành công](screenshots/payment_success.png)
 <br>
 
 ### 4. Admin Dashboard
