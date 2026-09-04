@@ -300,7 +300,7 @@ kt-clinic/
 <br>
 
 ### 2. Quản lý Thú cưng & Sổ tiêm phòng
-<!-- Chèn ảnh Quản lý thú cưng tại đây: ![Thú cưng](link_anh) -->
+![Quản lý thú cưng](screenshots/mypets.png)
 <br>
 
 ### 3. Tích hợp Thanh toán (VNPay / VietQR)
@@ -320,7 +320,13 @@ kt-clinic/
 <br>
 
 ### 4. Admin Dashboard
-<!-- Chèn ảnh Dashboard tại đây: ![Dashboard](link_anh) -->
+![Tổng quan Dashboard](screenshots/admin_dashboard.png)
+<br>
+
+![Quản lý lịch hẹn](screenshots/admin_appointments.png)
+<br>
+
+![Chi tiết phiếu hẹn & xuất bill](screenshots/admin_appointment_modal.png)
 <br>
 
 ---
