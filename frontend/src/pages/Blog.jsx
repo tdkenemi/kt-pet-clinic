@@ -986,16 +986,35 @@ export default function Blog() {
   const [editingBlog, setEditingBlog] = useState(null);
   const [viewingDetailBlog, setViewingDetailBlog] = useState(null);
 
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const user = getUser();
   const { showAlert, showConfirm } = useAlert();
 
   useEffect(() => {
-    const tabParam = searchParams.get('tab');
-    if (tabParam === 'my' && user) setTab('my');
     fetchBlogs();
   }, []);
+
+  // Tự động đồng bộ tab khi URL thay đổi (VD: người dùng bấm "Bài viết của tôi" từ menu tài khoản trên Topbar)
+  useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'my') {
+      setTab('my');
+      setActiveCategory('all');
+    } else {
+      setTab('all');
+    }
+  }, [searchParams]);
+
+  const handleTabSwitch = (newTab) => {
+    setTab(newTab);
+    if (newTab === 'my') {
+      setSearchParams({ tab: 'my' });
+      setActiveCategory('all');
+    } else {
+      setSearchParams({});
+    }
+  };
 
   const fetchBlogs = async () => {
     try {
@@ -1060,6 +1079,16 @@ export default function Blog() {
     }
   };
 
+  // Xác thực bài viết có thuộc về user hiện tại hay không (kiểm tra theo ID và Tên hiển thị)
+  const isMyPost = (b) => {
+    if (!user) return false;
+    const currentUserId = (user._id || user.id)?.toString();
+    const authorId = (b.authorId?._id || b.authorId)?.toString();
+    const matchId = Boolean(currentUserId && authorId && currentUserId === authorId);
+    const matchName = Boolean(b.author && user.fullName && b.author.trim().toLowerCase() === user.fullName.trim().toLowerCase());
+    return matchId || matchName;
+  };
+
   // Lọc dữ liệu
   const filteredBlogs = blogs.filter(b => {
     const matchSearch = !search ||
@@ -1067,7 +1096,7 @@ export default function Blog() {
       b.content?.toLowerCase().includes(search.toLowerCase()) ||
       (b.tags && b.tags.some(t => t.toLowerCase().includes(search.toLowerCase())));
 
-    const matchTab = tab === 'all' || (tab === 'my' && user && b.authorId && (b.authorId._id === user._id || b.authorId === user._id));
+    const matchTab = tab === 'all' || isMyPost(b);
 
     const matchCategory = activeCategory === 'all' ||
       (b.tags && b.tags.some(t => t.toLowerCase().includes(activeCategory.toLowerCase()))) ||
@@ -1088,7 +1117,7 @@ export default function Blog() {
   const featuredBlog = isDefaultFeed && sortedBlogs.length > 0 ? sortedBlogs[0] : null;
   const standardBlogs = featuredBlog ? sortedBlogs.slice(1) : sortedBlogs;
 
-  const myPostsCount = blogs.filter(b => user && b.authorId && (b.authorId._id === user._id || b.authorId === user._id)).length;
+  const myPostsCount = blogs.filter(isMyPost).length;
 
   return (
     <div className="bg-slate-50 dark:bg-[#0f1115] min-h-screen pt-20 transition-colors duration-300">
@@ -1245,7 +1274,7 @@ export default function Blog() {
               {/* Tab Selector */}
               <div className="flex p-1 bg-slate-100 dark:bg-slate-800/90 rounded-full">
                 <button
-                  onClick={() => setTab('all')}
+                  onClick={() => handleTabSwitch('all')}
                   className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition ${
                     tab === 'all'
                       ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
@@ -1256,7 +1285,7 @@ export default function Blog() {
                 </button>
                 {user && (
                   <button
-                    onClick={() => setTab('my')}
+                    onClick={() => handleTabSwitch('my')}
                     className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition flex items-center gap-1.5 ${
                       tab === 'my'
                         ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-sm'
@@ -1308,13 +1337,17 @@ export default function Blog() {
               <BookOpen className="w-8 h-8" />
             </div>
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
-              {search ? 'Không tìm thấy bài viết phù hợp' : 'Chưa có bài viết nào'}
+              {search
+                ? 'Không tìm thấy bài viết phù hợp'
+                : tab === 'my'
+                ? 'Bạn chưa có bài viết nào'
+                : 'Chưa có bài viết nào'}
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-6">
               {search
                 ? `Thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc để xem toàn bộ cẩm nang thú cưng.`
                 : tab === 'my'
-                ? 'Bạn chưa đăng bài viết nào. Hãy chia sẻ câu chuyện thú cưng đầu tiên của bạn!'
+                ? 'Bạn chưa đăng bài viết nào. Hãy chia sẻ câu chuyện thú cưng đầu tiên của bạn cùng KT Clinic!'
                 : 'Hãy là người đầu tiên chia sẻ kinh nghiệm chăm sóc thú cưng cùng cộng đồng!'}
             </p>
             {search ? (
@@ -1329,7 +1362,7 @@ export default function Blog() {
                 onClick={() => { setEditingBlog(null); setShowFormModal(true); }}
                 className="btn-primary py-2.5 px-6 text-xs font-bold"
               >
-                <Plus className="w-4 h-4" /> Đăng bài viết ngay
+                <Plus className="w-4 h-4" /> {tab === 'my' ? 'Đăng bài viết đầu tiên của bạn' : 'Đăng bài viết ngay'}
               </button>
             ) : null}
           </div>
@@ -1353,9 +1386,9 @@ export default function Blog() {
               <div className="lg:col-span-8">
                 <div className="flex items-center justify-between mb-5">
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                    <span>Khám phá bài viết</span>
+                    <span>{tab === 'my' ? 'Bài viết của tôi' : 'Khám phá bài viết'}</span>
                     <span className="text-xs px-2.5 py-0.5 rounded-full bg-brand-50 dark:bg-brand-900/30 text-brand-700 dark:text-brand-300 font-semibold">
-                      {standardBlogs.length + (featuredBlog ? 1 : 0)} bài viết
+                      {tab === 'my' ? `${myPostsCount} bài viết` : `${standardBlogs.length + (featuredBlog ? 1 : 0)} bài viết`}
                     </span>
                   </h3>
                 </div>

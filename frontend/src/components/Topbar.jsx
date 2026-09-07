@@ -57,7 +57,7 @@ export function Topbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  useEffect(() => { setMobileMenuOpen(false); setAvatarMenuOpen(false); setNotifMenuOpen(false); }, [location.pathname]);
+  useEffect(() => { setMobileMenuOpen(false); setAvatarMenuOpen(false); setNotifMenuOpen(false); }, [location.pathname, location.search]);
 
   const fetchNotifications = useCallback(async () => {
     if (!user) return;
