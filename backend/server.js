@@ -79,7 +79,7 @@ app.use(cors({
     callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
@@ -128,6 +128,19 @@ const seedAdmin = async () => {
       });
       console.log('✅ Đã tạo tài khoản admin mặc định (TK: admin, MK: 123456)');
     }
+
+    const adminClinicExists = await User.findOne({ email: 'admin@ktclinic.com' });
+    if (!adminClinicExists) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('password123', salt);
+      await User.create({
+        fullName: 'Quản trị viên KT Clinic',
+        email: 'admin@ktclinic.com',
+        password: hashedPassword,
+        role: 'admin'
+      });
+      console.log('✅ Đã tạo tài khoản admin (TK: admin@ktclinic.com, MK: password123)');
+    }
   } catch (err) {
     console.error('❌ Lỗi tạo admin:', err);
   }
@@ -164,6 +177,10 @@ const seedServices = async () => {
 };
 
 // Kết nối MongoDB
+mongoose.connection.on('error', err => console.error('❌ Lỗi kết nối MongoDB:', err));
+mongoose.connection.on('disconnected', () => console.warn('⚠️ MongoDB bị ngắt kết nối. Đang tự động kết nối lại...'));
+mongoose.connection.on('reconnected', () => console.log('✅ MongoDB đã kết nối lại thành công.'));
+
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
     console.log('✅ Đã kết nối MongoDB Atlas');

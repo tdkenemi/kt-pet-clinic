@@ -45,7 +45,6 @@ const paymentSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 // Index for searching
-paymentSchema.index({ transactionCode: 1 });
 paymentSchema.index({ appointmentId: 1 });
 
 module.exports = mongoose.model('Payment', paymentSchema);
