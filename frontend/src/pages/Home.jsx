@@ -5,13 +5,45 @@ import axios from 'axios';
 import {
   CalendarCheck, ShieldCheck, Clock, Activity,
   ArrowRight, Star, Phone, MapPin, Sparkles,
-  PawPrint, Stethoscope, Scissors, Heart
+  PawPrint, Stethoscope, Scissors, Heart, ChevronLeft, ChevronRight
 } from 'lucide-react';
 
-const heroImages = [
-  "https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1920&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1583337130417-3346a1be7dee?q=80&w=1920&auto=format&fit=crop",
+const heroSlides = [
+  {
+    url: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=1920&auto=format&fit=crop",
+    tag: "Mèo Cưng Quý Phái",
+    emoji: "🐱",
+    badge: "Chăm sóc Mèo cưng chuyên sâu",
+    desc: "Môi trường khám riêng biệt, nhẹ nhàng & giảm thiểu căng thẳng cho mèo"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?q=80&w=1920&auto=format&fit=crop",
+    tag: "Cún Cưng Năng Động",
+    emoji: "🐕",
+    badge: "Chăm sóc Cún cưng toàn diện",
+    desc: "Kiểm tra thể lực định kỳ, phác đồ dinh dưỡng và tiêm phòng tiêu chuẩn"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=1920&auto=format&fit=crop",
+    tag: "Bé Mèo Dễ Thương",
+    emoji: "🐈",
+    badge: "Khoa Nhi & Chăm sóc Mèo con",
+    desc: "Tầm soát bệnh lý hô hấp, nấm da và chăm sóc lông mượt mà"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1548767797-d8c844163c4c?q=80&w=1920&auto=format&fit=crop",
+    tag: "Chó & Mèo Đồng Hành",
+    emoji: "🐾",
+    badge: "Mái ấm 4 chân hạnh phúc",
+    desc: "Bác sĩ chuyên khoa tận tâm, đồng hành cùng sức khỏe thú cưng trọn đời"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?q=80&w=1920&auto=format&fit=crop",
+    tag: "Cún Cưng Hạnh Phúc",
+    emoji: "🐶",
+    badge: "Phục hồi & Nội trú 5 sao",
+    desc: "Theo dõi 24/7, phòng lưu bệnh vô trùng tiêu chuẩn quốc tế"
+  }
 ];
 
 const stats = [
@@ -30,9 +62,33 @@ const services = [
   { icon: Heart, title: 'Nội Khoa', desc: 'Điều trị bệnh lý nội khoa phức tạp với phác đồ khoa học, theo dõi sát sao.', service: 'Nội Khoa', color: 'text-brand-600 bg-brand-100' },
 ];
 
+const petGallery = [
+  {
+    url: "https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=800&auto=format&fit=crop",
+    tag: "Cún Golden Retriever 🐕",
+    desc: "Khỏe khoắn, vui tươi và tràn đầy năng lượng"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1592194996308-7b43878e84a6?q=80&w=800&auto=format&fit=crop",
+    tag: "Mèo Anh Lông Ngắn 🐱",
+    desc: "Khu khám riêng biệt, nhẹ nhàng và an tâm"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1543852786-1cf6624b9987?q=80&w=800&auto=format&fit=crop",
+    tag: "Mèo Con Đáng Yêu 🐾",
+    desc: "Chăm sóc dịu dàng từ những ngày đầu đời"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1518791841217-8f162f1e1131?q=80&w=800&auto=format&fit=crop",
+    tag: "Mèo Mắt Xanh Quý Phái 🐈",
+    desc: "Chế độ dinh dưỡng & spa lông mượt mà"
+  }
+];
+
 const testimonials = [
   { name: 'Nguyễn Thị Lan', pet: 'Cún Golden', text: 'Đội ngũ bác sĩ rất tận tâm! Bé Max nhà tôi được chăm sóc tuyệt vời, từ khâu đặt lịch đến khi khám xong, mọi thứ đều mượt mà và chuyên nghiệp.', avatar: '🐕', rating: 5 },
   { name: 'Trần Văn Hùng', pet: 'Mèo Maine Coon', text: 'Dịch vụ vô cùng đẳng cấp, phòng khám sạch sẽ và hiện đại. Bác sĩ giải thích rất chi tiết tình trạng sức khỏe của bé.', avatar: '🐈', rating: 5 },
+  { name: 'Lê Hoàng Yến', pet: 'Mèo Anh Lông Ngắn (Bé Bơ)', text: 'Bé mèo nhà mình rất nhát người lạ nhưng đến KT Pet Clinic lại cực kỳ ngoan. Bác sĩ thao tác nhẹ nhàng và có phòng riêng biệt cho mèo!', avatar: '🐱', rating: 5 },
 ];
 
 const whyUs = [
@@ -44,11 +100,17 @@ const whyUs = [
 
 export default function Home() {
   const [heroIdx, setHeroIdx] = useState(0);
+  const [petGalleryIdx, setPetGalleryIdx] = useState(0);
   const [staffs, setStaffs] = useState([]);
   const [testimonialIdx, setTestimonialIdx] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => setHeroIdx(i => (i + 1) % heroImages.length), 5000);
+    const timer = setInterval(() => setHeroIdx(i => (i + 1) % heroSlides.length), 6000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    const timer = setInterval(() => setPetGalleryIdx(i => (i + 1) % petGallery.length), 4500);
     return () => clearInterval(timer);
   }, []);
 
@@ -71,27 +133,46 @@ export default function Home() {
   return (
     <div className="overflow-x-hidden bg-white dark:bg-[#0f1115]">
       {/* ====== HERO ====== */}
-      <section className="relative h-[95vh] min-h-[650px] flex items-center overflow-hidden">
-        {/* Background slideshow */}
+      <section className="relative h-[95vh] min-h-[680px] flex items-center overflow-hidden">
+        {/* Background slideshow with cats and dogs */}
         <AnimatePresence mode="wait">
           <motion.div
             key={heroIdx}
-            initial={{ opacity: 0, scale: 1.05 }}
+            initial={{ opacity: 0, scale: 1.08 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 1.5, ease: 'easeInOut' }}
+            exit={{ opacity: 0, scale: 0.96 }}
+            transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
             <img
-              src={heroImages[heroIdx]}
-              alt="KT Pet Clinic"
+              src={heroSlides[heroIdx].url}
+              alt={heroSlides[heroIdx].tag}
               className="w-full h-full object-cover will-change-transform"
             />
           </motion.div>
         </AnimatePresence>
 
-        {/* Gradient overlay - much cleaner, deeper contrast */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/60 to-transparent opacity-90" />
+        {/* Gradient overlay - deeper contrast & smooth depth */}
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-900/70 to-transparent opacity-95" />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
+
+        {/* Hero Navigation Arrows (Desktop) */}
+        <div className="absolute inset-y-0 left-4 right-4 z-20 hidden md:flex items-center justify-between pointer-events-none">
+          <button
+            onClick={() => setHeroIdx(i => (i - 1 + heroSlides.length) % heroSlides.length)}
+            className="pointer-events-auto p-3.5 rounded-full bg-black/30 hover:bg-white/20 text-white/80 hover:text-white backdrop-blur-md border border-white/15 transition-all duration-300 hover:scale-110 shadow-xl"
+            aria-label="Previous Slide"
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </button>
+          <button
+            onClick={() => setHeroIdx(i => (i + 1) % heroSlides.length)}
+            className="pointer-events-auto p-3.5 rounded-full bg-black/30 hover:bg-white/20 text-white/80 hover:text-white backdrop-blur-md border border-white/15 transition-all duration-300 hover:scale-110 shadow-xl"
+            aria-label="Next Slide"
+          >
+            <ChevronRight className="w-6 h-6" />
+          </button>
+        </div>
 
         {/* Content */}
         <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full pt-12">
@@ -101,27 +182,64 @@ export default function Home() {
             transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl"
           >
-            <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 text-brand-100 text-xs font-bold tracking-[0.2em] uppercase rounded-full border border-white/10 mb-8 backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5" />
-              Đẳng cấp chăm sóc thú cưng
-            </span>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={heroIdx}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.4 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 text-brand-200 text-xs font-bold tracking-[0.15em] uppercase rounded-full border border-white/15 mb-6 backdrop-blur-md shadow-lg"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-brand-300" />
+                <span>{heroSlides[heroIdx].badge}</span>
+                <span className="text-sm">{heroSlides[heroIdx].emoji}</span>
+              </motion.div>
+            </AnimatePresence>
 
-            <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.05] tracking-tight mb-8">
+            <h1 className="text-5xl md:text-7xl font-black text-white leading-[1.05] tracking-tight mb-6">
               Sức khoẻ<br />
               <span className="text-brand-400">thú cưng</span><br />
               của bạn
             </h1>
 
-            <p className="text-slate-300 text-lg md:text-xl leading-relaxed mb-10 max-w-lg font-light">
-              Môi trường y tế vô trùng, trang thiết bị hiện đại bậc nhất. Trải nghiệm dịch vụ thú y tiêu chuẩn quốc tế.
-            </p>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={heroIdx}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-slate-300 text-lg md:text-xl leading-relaxed mb-8 max-w-lg font-light"
+              >
+                {heroSlides[heroIdx].desc}
+              </motion.p>
+            </AnimatePresence>
+
+            {/* Pet Quick Switcher Tabs in Hero */}
+            <div className="flex flex-wrap gap-2 mb-8">
+              {heroSlides.map((slide, i) => (
+                <button
+                  key={slide.tag}
+                  onClick={() => setHeroIdx(i)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-300 flex items-center gap-1.5 border backdrop-blur-sm ${
+                    i === heroIdx
+                      ? 'bg-brand-500 text-white border-brand-400 shadow-glow-brand scale-105'
+                      : 'bg-black/30 text-slate-300 border-white/10 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <span>{slide.emoji}</span>
+                  <span>{slide.tag}</span>
+                </button>
+              ))}
+            </div>
 
             <div className="flex flex-wrap gap-4">
-              <Link to="/booking" className="btn-primary py-4 px-8 text-base">
+              <Link to="/booking" className="btn-primary py-4 px-8 text-base shadow-glow-brand">
                 <CalendarCheck className="w-5 h-5" />
                 Đặt lịch khám ngay
               </Link>
-              <a href="tel:0901234567" className="btn-ghost text-white hover:text-slate-900 hover:bg-white py-4 px-8 text-base bg-white/5 border border-white/10 backdrop-blur-sm">
+              <a href="tel:0901234567" className="btn-ghost text-white hover:text-slate-900 hover:bg-white py-4 px-8 text-base bg-white/10 border border-white/15 backdrop-blur-md">
                 <Phone className="w-5 h-5" />
                 Hotline 24/7
               </a>
@@ -134,26 +252,26 @@ export default function Home() {
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="absolute bottom-10 left-6 right-6 md:left-12 md:right-auto z-10"
+          className="absolute bottom-8 left-6 right-6 md:left-12 md:right-auto z-10"
         >
-          <div className="flex items-center gap-8 md:gap-16 py-6 px-10 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 shadow-2xl">
+          <div className="flex items-center gap-6 md:gap-14 py-5 px-8 bg-slate-950/60 backdrop-blur-xl rounded-3xl border border-white/10 shadow-2xl">
             {stats.map(({ label, value }) => (
               <div key={label} className="flex flex-col">
-                <span className="text-3xl md:text-4xl font-black text-white mb-1 tracking-tight">{value}</span>
-                <span className="text-xs text-brand-200 font-medium uppercase tracking-widest">{label}</span>
+                <span className="text-2xl md:text-3xl font-black text-white mb-0.5 tracking-tight">{value}</span>
+                <span className="text-[11px] text-brand-300 font-semibold uppercase tracking-wider">{label}</span>
               </div>
             ))}
           </div>
         </motion.div>
 
-        {/* Slide indicators */}
-        <div className="absolute right-8 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-10">
-          {heroImages.map((_, i) => (
+        {/* Slide indicators (Right side) */}
+        <div className="absolute right-8 top-1/2 -translate-y-1/2 hidden sm:flex flex-col gap-3 z-10">
+          {heroSlides.map((_, i) => (
             <button
               key={i}
               onClick={() => setHeroIdx(i)}
-              className={`w-1 rounded-full transition-all duration-500 ${i === heroIdx ? 'h-12 bg-brand-400' : 'h-4 bg-white/20 hover:bg-white/40'}`}
-              aria-label={`Go to slide ${i + 1}`}
+              className={`w-1.5 rounded-full transition-all duration-500 ${i === heroIdx ? 'h-12 bg-brand-400 shadow-glow-brand' : 'h-4 bg-white/20 hover:bg-white/50'}`}
+              aria-label={`Chuyển đến slide ${i + 1}`}
             />
           ))}
         </div>
@@ -199,26 +317,88 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ====== WHY US - Editorial Layout ====== */}
+      {/* ====== WHY US - Editorial Layout with Cats & Dogs Slider ====== */}
       <section className="py-24 lg:py-32 bg-white dark:bg-[#0a0c0f]">
         <div className="max-w-7xl mx-auto px-6 md:px-12">
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-24 items-center">
             
-            {/* Image Block - 5 cols */}
+            {/* Image Block - 5 cols with smooth Cats & Dogs Carousel */}
             <motion.div
               {...fadeUp}
               className="lg:col-span-5 relative"
             >
-              <div className="aspect-[3/4] rounded-3xl overflow-hidden relative shadow-2xl">
-                <img
-                  src="https://images.unsplash.com/photo-1576201836106-db1758fd1c97?q=80&w=800&auto=format&fit=crop"
-                  alt="Veterinarian with dog"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-brand-900/10 mix-blend-multiply" />
+              <div className="aspect-[3/4] rounded-3xl overflow-hidden relative shadow-2xl group">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={petGalleryIdx}
+                    initial={{ opacity: 0, scale: 1.06 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    className="absolute inset-0 w-full h-full"
+                  >
+                    <img
+                      src={petGallery[petGalleryIdx].url}
+                      alt={petGallery[petGalleryIdx].tag}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-black/30" />
+
+                    {/* Floating Pill Tag at Top Left */}
+                    <div className="absolute top-5 left-5 backdrop-blur-md bg-black/50 text-white text-xs font-semibold px-3.5 py-1.5 rounded-full border border-white/20 flex items-center gap-2 shadow-lg">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>{petGallery[petGalleryIdx].tag}</span>
+                    </div>
+
+                    {/* Subtitle at Bottom */}
+                    <div className="absolute bottom-6 left-6 right-6 text-white pr-20">
+                      <p className="text-[11px] text-brand-300 font-semibold uppercase tracking-wider mb-1">KT Pet Care</p>
+                      <p className="text-sm font-medium text-slate-100 leading-snug drop-shadow-md">
+                        {petGallery[petGalleryIdx].desc}
+                      </p>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Card Slider Controls */}
+                <div className="absolute top-5 right-5 z-10 flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPetGalleryIdx(i => (i - 1 + petGallery.length) % petGallery.length);
+                    }}
+                    className="p-2 rounded-full bg-black/40 hover:bg-white/30 text-white backdrop-blur-md border border-white/15 transition-transform active:scale-95 shadow-md"
+                    aria-label="Previous pet"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setPetGalleryIdx(i => (i + 1) % petGallery.length);
+                    }}
+                    className="p-2 rounded-full bg-black/40 hover:bg-white/30 text-white backdrop-blur-md border border-white/15 transition-transform active:scale-95 shadow-md"
+                    aria-label="Next pet"
+                  >
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+
+                {/* Card Dots Indicator */}
+                <div className="absolute bottom-4 right-5 z-10 flex gap-1.5">
+                  {petGallery.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setPetGalleryIdx(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${i === petGalleryIdx ? 'w-6 bg-brand-400 shadow-glow-brand' : 'w-1.5 bg-white/40 hover:bg-white/70'}`}
+                      aria-label={`Ảnh thú cưng ${i + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
               
-              <div className="absolute -bottom-8 -right-8 bg-white dark:bg-[#1a1d24] p-6 rounded-3xl shadow-xl border border-slate-100 dark:border-white/5 max-w-[240px]">
+              {/* Floating Award Badge */}
+              <div className="absolute -bottom-8 -right-8 bg-white dark:bg-[#1a1d24] p-6 rounded-3xl shadow-xl border border-slate-100 dark:border-white/5 max-w-[240px] z-20">
                 <div className="flex gap-1 mb-2">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-gold-500 text-gold-500" />

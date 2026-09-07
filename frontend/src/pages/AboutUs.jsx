@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { useLanguage } from '../contexts/LanguageContext';
-import { MapPin, Phone, Mail, Clock, CheckCircle, Users, Award, Stethoscope, Heart } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, CheckCircle, Users, Award, Stethoscope, Heart, ChevronLeft, ChevronRight, Sparkles } from 'lucide-react';
 import MapEmbed from '../components/MapEmbed';
 
 const fadeInUp = {
@@ -26,9 +26,44 @@ const values = [
   { emoji: '🌱', title: 'Bền vững', desc: 'Cam kết với môi trường và cộng đồng yêu động vật tại Việt Nam.' },
 ];
 
+const storyGallery = [
+  {
+    url: "https://images.unsplash.com/photo-1599443015574-be5fe8a05783?q=80&w=1200&auto=format&fit=crop",
+    title: "Chăm sóc phục hồi sau phẫu thuật (Bé Cún Pug)",
+    badge: "Phục hồi chức năng 🐶",
+    tag: "Chuyên khoa Ngoại"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1561948955-570b270e7c36?q=80&w=1200&auto=format&fit=crop",
+    title: "Khu vực điều trị tĩnh dưỡng riêng biệt cho các bé Mèo",
+    badge: "Cat-Friendly Clinic 🐱",
+    tag: "Chuyên khoa Mèo"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?q=80&w=1200&auto=format&fit=crop",
+    title: "Khám định kỳ & tầm soát sức khỏe toàn diện cho Mèo cưng",
+    badge: "Chăm sóc Mèo cưng 🐈",
+    tag: "Khoa Nội & Miễn dịch"
+  },
+  {
+    url: "https://images.unsplash.com/photo-1548767797-d8c844163c4c?q=80&w=1200&auto=format&fit=crop",
+    title: "Đồng hành yêu thương cùng Chó & Mèo như người thân",
+    badge: "Gia đình thú cưng 🐾",
+    tag: "Tận tâm đồng hành"
+  }
+];
+
 export default function AboutUs() {
   const [staffs, setStaffs] = useState([]);
+  const [storyIdx, setStoryIdx] = useState(0);
   const { lang } = useLanguage();
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStoryIdx(i => (i + 1) % storyGallery.length);
+    }, 4500);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const fetchStaffs = async () => {
@@ -116,12 +151,74 @@ export default function AboutUs() {
               </div>
             </motion.div>
 
-            <motion.div {...fadeInUp} transition={{ delay: 0.2 }}>
-              <img
-                src="https://images.unsplash.com/photo-1599443015574-be5fe8a05783?q=80&w=1200&auto=format&fit=crop"
-                alt="Clinic Interior"
-                className="w-full h-96 object-cover rounded-3xl shadow-xl"
-              />
+            <motion.div {...fadeInUp} transition={{ delay: 0.2 }} className="relative group">
+              <div className="relative w-full h-96 md:h-[420px] rounded-3xl overflow-hidden shadow-2xl bg-slate-950">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={storyIdx}
+                    initial={{ opacity: 0, scale: 1.06 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.96 }}
+                    transition={{ duration: 0.8, ease: "easeInOut" }}
+                    className="absolute inset-0 w-full h-full"
+                  >
+                    <img
+                      src={storyGallery[storyIdx].url}
+                      alt={storyGallery[storyIdx].title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-black/25" />
+
+                    {/* Badge top left */}
+                    <div className="absolute top-5 left-5 backdrop-blur-md bg-black/50 text-white text-xs font-semibold px-3.5 py-1.5 rounded-full border border-white/20 flex items-center gap-2 shadow-lg">
+                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>{storyGallery[storyIdx].badge}</span>
+                    </div>
+
+                    {/* Tag top right */}
+                    <div className="absolute top-5 right-14 backdrop-blur-md bg-blue-600/80 text-white text-[11px] font-semibold px-3 py-1 rounded-full border border-white/20 shadow-md">
+                      {storyGallery[storyIdx].tag}
+                    </div>
+
+                    {/* Bottom caption */}
+                    <div className="absolute bottom-6 left-6 right-6 text-white pr-16">
+                      <p className="text-sm md:text-base font-semibold text-white leading-snug drop-shadow-md">
+                        {storyGallery[storyIdx].title}
+                      </p>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Navigation arrows */}
+                <div className="absolute top-5 right-4 z-10 flex items-center gap-1.5 opacity-80 group-hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => setStoryIdx(i => (i - 1 + storyGallery.length) % storyGallery.length)}
+                    className="p-1.5 rounded-full bg-black/40 hover:bg-white/30 text-white backdrop-blur-md border border-white/15 transition-transform active:scale-95 shadow-md"
+                    aria-label="Previous story image"
+                  >
+                    <ChevronLeft className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => setStoryIdx(i => (i + 1) % storyGallery.length)}
+                    className="p-1.5 rounded-full bg-black/40 hover:bg-white/30 text-white backdrop-blur-md border border-white/15 transition-transform active:scale-95 shadow-md"
+                    aria-label="Next story image"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                {/* Indicator dots */}
+                <div className="absolute bottom-5 right-6 z-10 flex gap-1.5">
+                  {storyGallery.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setStoryIdx(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${i === storyIdx ? 'w-6 bg-blue-400 shadow-md' : 'w-1.5 bg-white/40 hover:bg-white/70'}`}
+                      aria-label={`Ảnh ${i + 1}`}
+                    />
+                  ))}
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
