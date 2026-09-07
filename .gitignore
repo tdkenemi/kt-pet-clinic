@@ -44,6 +44,7 @@ server-test.log
 .agents/
 PRODUCT.md
 *.docx
+docs/*.docx
 temp.zip
 temp_docx/
 old_booking.txt
