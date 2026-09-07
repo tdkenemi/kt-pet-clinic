@@ -95,7 +95,7 @@ app.use(helmet());
 // 2. Rate limiting (Toàn cục)
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 phút
-  max: 200, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
+  max: process.env.NODE_ENV === 'development' ? 2000 : 200, // Limit each IP to 200 requests per `window` (here, per 15 minutes)
   message: 'Quá nhiều yêu cầu từ IP của bạn, vui lòng thử lại sau 15 phút.',
   standardHeaders: true, 
   legacyHeaders: false,

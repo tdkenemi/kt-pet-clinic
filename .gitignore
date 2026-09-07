@@ -40,11 +40,13 @@ server-out.log
 server-err.log
 server-test.log
 
-# ===== Internal / không cần thiết cho người xem GitHub =====
+# ===== Internal / Tạm thời / Không commit lên GitHub =====
 .agents/
 PRODUCT.md
 *.docx
-frontend/replace_colors.cjs
-backend/test_create_apt.js
+temp.zip
+temp_docx/
 old_booking.txt
 BaoCao_DoAn.md
+backend/scripts/
+frontend/scripts/
