@@ -361,10 +361,14 @@ exports.createVNPayUrl = async (req, res) => {
       return res.status(400).json({ message: 'Số tiền không hợp lệ để thanh toán VNPay' });
     }
 
-    const tmnCode = process.env.VNP_TMN_CODE || '04MS7FUL';
-    const secretKey = process.env.VNP_HASH_SECRET || 'QZLHJYXCIWGZNDTKLNGHSWEEPZCCJCYU';
+    const tmnCode = process.env.VNP_TMN_CODE;
+    const secretKey = process.env.VNP_HASH_SECRET;
     const vnpUrl = process.env.VNP_URL || 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
     const returnUrl = process.env.VNP_RETURN_URL || 'http://localhost:5173/payment-return';
+
+    if (!tmnCode || !secretKey) {
+      return res.status(500).json({ message: 'Chưa cấu hình thông tin VNPay trong biến môi trường (.env)' });
+    }
 
     const dayjs = require('dayjs');
     const utc = require('dayjs/plugin/utc');
@@ -436,7 +440,10 @@ exports.verifyVNPayReturn = async (req, res) => {
 
     vnp_Params = sortObject(vnp_Params);
 
-    const secretKey = process.env.VNP_HASH_SECRET || 'QZLHJYXCIWGZNDTKLNGHSWEEPZCCJCYU';
+    const secretKey = process.env.VNP_HASH_SECRET;
+    if (!secretKey) {
+      return res.status(500).json({ message: 'Chưa cấu hình VNP_HASH_SECRET trong biến môi trường (.env)' });
+    }
     
     const signData = Object.keys(vnp_Params)
       .map(key => `${key}=${vnp_Params[key]}`)
