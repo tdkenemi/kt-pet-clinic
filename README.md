@@ -112,10 +112,11 @@ cd frontend && npm run dev
 
 ### Tài khoản Demo
 
-| Role | Email | Mật khẩu |
-|------|-------|----------|
-| 👑 Admin | `admin` | Xem .env → ADMIN_PASSWORD |
-| 👤 Customer | Đăng ký mới | Bất kỳ |
+| Role | Email | Mật khẩu (Mặc định) | Ghi chú |
+|------|-------|---------------------|---------|
+| 👑 Admin | `admin` | `123456` | Thay đổi qua biến `.env`: `ADMIN_PASSWORD_1` |
+| 👑 Admin 2| `admin@ktclinic.com`| `password123`| Thay đổi qua biến `.env`: `ADMIN_PASSWORD_2` |
+| 👤 Khách hàng | (Đăng ký mới) | Bất kỳ | |
 
 ---
 

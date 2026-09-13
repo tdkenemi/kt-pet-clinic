@@ -23,10 +23,20 @@ const vaccinationRoutes = require('./routes/vaccinationRoutes');
 
 const app = express();
 const server = http.createServer(app);
+
+// CORS - cho phép frontend truy cập
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'http://localhost:4173',
+  process.env.FRONTEND_URL
+].filter(Boolean);
+
 const io = new Server(server, {
   cors: {
-    origin: '*', // Trong thực tế nên giới hạn lại theo frontend url
-    methods: ['GET', 'POST']
+    origin: allowedOrigins,
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
@@ -60,14 +70,6 @@ io.on('connection', (socket) => {
 
 // Make io accessible in routes
 app.set('io', io);
-
-// CORS - cho phép frontend truy cập
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:3000',
-  'http://localhost:4173',
-  process.env.FRONTEND_URL
-].filter(Boolean);
 
 app.use(cors({
   origin: (origin, callback) => {
@@ -119,27 +121,29 @@ const seedAdmin = async () => {
     const adminExists = await User.findOne({ email: 'admin' });
     if (!adminExists) {
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(process.env.ADMIN_PASSWORD || '123456', salt);
+      const pass = process.env.ADMIN_PASSWORD_1 || '123456';
+      const hashedPassword = await bcrypt.hash(pass, salt);
       await User.create({
         fullName: 'Quản trị viên',
         email: 'admin',
         password: hashedPassword,
         role: 'admin'
       });
-      console.log('✅ Đã tạo tài khoản admin mặc định (TK: admin, MK: 123456)');
+      console.log(`✅ Đã tạo tài khoản admin mặc định (TK: admin, MK: ${process.env.ADMIN_PASSWORD_1 ? '***' : '123456'})`);
     }
 
     const adminClinicExists = await User.findOne({ email: 'admin@ktclinic.com' });
     if (!adminClinicExists) {
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash('password123', salt);
+      const pass = process.env.ADMIN_PASSWORD_2 || 'password123';
+      const hashedPassword = await bcrypt.hash(pass, salt);
       await User.create({
         fullName: 'Quản trị viên KT Clinic',
         email: 'admin@ktclinic.com',
         password: hashedPassword,
         role: 'admin'
       });
-      console.log('✅ Đã tạo tài khoản admin (TK: admin@ktclinic.com, MK: password123)');
+      console.log(`✅ Đã tạo tài khoản admin (TK: admin@ktclinic.com, MK: ${process.env.ADMIN_PASSWORD_2 ? '***' : 'password123'})`);
     }
   } catch (err) {
     console.error('❌ Lỗi tạo admin:', err);
