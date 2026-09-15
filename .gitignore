@@ -44,10 +44,14 @@ server-test.log
 .agents/
 PRODUCT.md
 *.docx
-docs/*.docx
+*.doc
+~$*.docx
+docs/
+screenshots/
 temp.zip
 temp_docx/
 old_booking.txt
 BaoCao_DoAn.md
 backend/scripts/
 frontend/scripts/
+
